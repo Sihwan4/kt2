@@ -32,6 +32,14 @@
             transform: scale(1.02);
             transition: all 0.3s ease;
         }
+
+        .disease-tag {
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-900">
@@ -82,7 +90,7 @@
                         <i data-lucide="git-merge" class="text-green-600 w-8 h-8"></i>
                     </div>
                     <h3 class="font-bold text-lg mb-2">분야간 융합</h3>
-                    <p class="text-slate-500">암, 자가면역 질환의 최신 연구를 이식에 접목합니다.</p>
+                    <p class="text-slate-500">암, 자가면역, 감염 질환의 최신 연구를 이식에 접목합니다.</p>
                 </div>
                 <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 flex flex-col items-center text-center">
                     <div class="bg-purple-100 p-4 rounded-full mb-4">
@@ -100,7 +108,6 @@
                 <i data-lucide="layers" class="text-blue-600"></i> 멀티오믹스 방법론
             </h2>
             <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <!-- Genomics -->
                 <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-blue-500 omics-card">
                     <h3 class="font-bold text-xl mb-3">유전체학</h3>
                     <p class="text-sm text-blue-600 font-medium mb-4">Genomics (DNA)</p>
@@ -110,7 +117,6 @@
                     </ul>
                     <p class="text-xs text-slate-400 font-semibold">선천적 질병 감수성 파악</p>
                 </div>
-                <!-- Transcriptomics -->
                 <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-green-500 omics-card">
                     <h3 class="font-bold text-xl mb-3">전사체학</h3>
                     <p class="text-sm text-green-600 font-medium mb-4">Transcriptomics (RNA)</p>
@@ -120,7 +126,6 @@
                     </ul>
                     <p class="text-xs text-slate-400 font-semibold">현재 세포의 활성화 상태</p>
                 </div>
-                <!-- Proteomics -->
                 <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-orange-500 omics-card">
                     <h3 class="font-bold text-xl mb-3">단백체학</h3>
                     <p class="text-sm text-orange-600 font-medium mb-4">Proteomics (Protein)</p>
@@ -130,7 +135,6 @@
                     </ul>
                     <p class="text-xs text-slate-400 font-semibold">실제 생체 기능 수행 물질</p>
                 </div>
-                <!-- Metabolomics -->
                 <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-purple-500 omics-card">
                     <h3 class="font-bold text-xl mb-3">기타 오믹스</h3>
                     <p class="text-sm text-purple-600 font-medium mb-4">Epigenomics / Metabolomics</p>
@@ -145,53 +149,117 @@
 
         <!-- Section: Diseases -->
         <section id="diseases" class="hidden fade-in">
-            <h2 class="text-3xl font-bold mb-8 flex items-center gap-3">
-                <i data-lucide="binary" class="text-blue-600"></i> 질환별 응용 연구
+            <h2 class="text-3xl font-bold mb-4 flex items-center gap-3">
+                <i data-lucide="binary" class="text-blue-600"></i> 질환별 응용 연구 상세
             </h2>
-            <div class="space-y-6">
+            <p class="text-slate-500 mb-10">각 질환별 핵심 연구 주제와 멀티오믹스 기술이 어떻게 임상적 통찰을 제공하는지 확인하세요.</p>
+            
+            <div class="space-y-8">
                 <!-- Cancer -->
-                <div class="bg-white overflow-hidden rounded-2xl shadow-sm border border-slate-200">
+                <div class="bg-white overflow-hidden rounded-2xl shadow-md border border-slate-200">
                     <div class="md:flex">
-                        <div class="md:w-1/3 bg-slate-900 p-8 flex flex-col justify-center text-white">
-                            <span class="text-blue-400 font-bold mb-2">ONCOLOGY</span>
-                            <h3 class="text-2xl font-bold mb-4">암 연구</h3>
-                            <p class="text-slate-400 text-sm">종양 미세환경(TME) 분석 및 면역 회피 기전 규명</p>
+                        <div class="md:w-1/4 bg-slate-900 p-8 flex flex-col justify-start text-white">
+                            <span class="disease-tag bg-blue-500 text-white mb-4 w-fit">Oncology</span>
+                            <h3 class="text-3xl font-bold mb-2">암 연구</h3>
+                            <p class="text-slate-400 text-sm leading-relaxed">면역 회피 기전 규명 및 신규 타겟 발굴</p>
                         </div>
-                        <div class="md:w-2/3 p-8">
-                            <h4 class="font-bold text-slate-700 mb-4">핵심 기술 활용</h4>
-                            <p class="text-slate-600 mb-6 italic">"면역세포가 암세포를 공격하지 못하게 방해하는 요소 탐색"</p>
-                            <div class="grid grid-cols-2 gap-4 text-sm">
-                                <div class="bg-slate-50 p-3 rounded-lg border border-slate-100">
-                                    <span class="font-bold block text-blue-600">Spatial Omics</span>
-                                    면역 억제 구역 시각화
+                        <div class="md:w-3/4 p-8">
+                            <div class="grid md:grid-cols-2 gap-8">
+                                <div>
+                                    <h4 class="font-bold text-slate-800 mb-3 flex items-center gap-2">
+                                        <i data-lucide="crosshair" class="w-4 h-4 text-blue-500"></i> 핵심 연구 주제
+                                    </h4>
+                                    <ul class="text-slate-600 text-sm space-y-3">
+                                        <li><strong class="text-slate-900">면역관문억제제 반응 예측:</strong> T세포 소진(Exhaustion) 정도를 scRNA-seq으로 정밀 분석하여 치료 반응성 예측</li>
+                                        <li><strong class="text-slate-900">종양 이질성(Heterogeneity):</strong> 암 조직 내 세포별 유전자 변이 차이를 추적하여 약물 내성 기전 규명</li>
+                                        <li><strong class="text-slate-900">신생 항원(Neoantigen) 발굴:</strong> WES/RNA-seq 통합 분석을 통한 개인 맞춤형 백신 타겟 선정</li>
+                                    </ul>
                                 </div>
-                                <div class="bg-slate-50 p-3 rounded-lg border border-slate-100">
-                                    <span class="font-bold block text-blue-600">ctDNA</span>
-                                    비침습적 종양 모니터링
+                                <div class="bg-slate-50 p-6 rounded-xl border border-slate-100">
+                                    <h4 class="font-bold text-slate-800 mb-3 flex items-center gap-2">
+                                        <i data-lucide="map" class="w-4 h-4 text-blue-500"></i> 공간적 통찰 (Spatial Insight)
+                                    </h4>
+                                    <p class="text-slate-600 text-xs leading-relaxed mb-4">
+                                        단순한 세포 구성을 넘어, 면역세포가 종양 내부로 얼마나 침투(Infiltration)했는지 공간 정보를 결합하여 <strong>'Cold Tumor'</strong>를 <strong>'Hot Tumor'</strong>로 전환하기 위한 전략 수립.
+                                    </p>
+                                    <div class="flex gap-2">
+                                        <span class="text-[10px] bg-white px-2 py-1 rounded border border-slate-200 text-slate-500">TME mapping</span>
+                                        <span class="text-[10px] bg-white px-2 py-1 rounded border border-slate-200 text-slate-500">Cell-cell interaction</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
                 <!-- Autoimmune -->
-                <div class="bg-white overflow-hidden rounded-2xl shadow-sm border border-slate-200">
+                <div class="bg-white overflow-hidden rounded-2xl shadow-md border border-slate-200">
                     <div class="md:flex">
-                        <div class="md:w-1/3 bg-blue-600 p-8 flex flex-col justify-center text-white">
-                            <span class="text-blue-100 font-bold mb-2">AUTOIMMUNE</span>
-                            <h3 class="text-2xl font-bold mb-4">자가면역 질환</h3>
-                            <p class="text-blue-100 text-sm">면역 관용의 붕괴 및 자가항체 생성 기전 추적</p>
+                        <div class="md:w-1/4 bg-blue-600 p-8 flex flex-col justify-start text-white">
+                            <span class="disease-tag bg-white text-blue-600 mb-4 w-fit">Autoimmune</span>
+                            <h3 class="text-3xl font-bold mb-2">자가면역</h3>
+                            <p class="text-blue-100 text-sm leading-relaxed">면역 관용의 상실 및 자가 항체 생성 기전</p>
                         </div>
-                        <div class="md:w-2/3 p-8">
-                            <h4 class="font-bold text-slate-700 mb-4">핵심 기술 활용</h4>
-                            <p class="text-slate-600 mb-6 italic">"내 몸을 공격하는 변절자 세포(Autoreactive cells) 탐지"</p>
-                            <div class="grid grid-cols-2 gap-4 text-sm">
-                                <div class="bg-slate-50 p-3 rounded-lg border border-slate-100">
-                                    <span class="font-bold block text-blue-600">TCR/BCR Seq</span>
-                                    면역 세포 클론 확장 추적
+                        <div class="md:w-3/4 p-8">
+                            <div class="grid md:grid-cols-2 gap-8">
+                                <div>
+                                    <h4 class="font-bold text-slate-800 mb-3 flex items-center gap-2">
+                                        <i data-lucide="zap" class="w-4 h-4 text-orange-500"></i> 핵심 연구 주제
+                                    </h4>
+                                    <ul class="text-slate-600 text-sm space-y-3">
+                                        <li><strong class="text-slate-900">BCR/TCR Repertoire:</strong> 자가 항체를 생성하는 특정 면역 클론의 비정상적 확장(Expansion) 추적</li>
+                                        <li><strong class="text-slate-900">후성유전학적 변형:</strong> 환경적 요인에 의한 DNA Methylation 변화가 자가면역 질환 발병에 미치는 영향 분석</li>
+                                        <li><strong class="text-slate-900">Rare Cell Discovery:</strong> 극소량의 병원성 세포(Pathogenic subset)를 단일 세포 분석으로 식별</li>
+                                    </ul>
                                 </div>
-                                <div class="bg-slate-50 p-3 rounded-lg border border-slate-100">
-                                    <span class="font-bold block text-blue-600">Flow Cytometry</span>
-                                    고위험 세포군 정밀 분리
+                                <div class="bg-blue-50 p-6 rounded-xl border border-blue-100">
+                                    <h4 class="font-bold text-slate-800 mb-3 flex items-center gap-2">
+                                        <i data-lucide="activity" class="w-4 h-4 text-blue-500"></i> 정밀 면역 모니터링
+                                    </h4>
+                                    <p class="text-slate-600 text-xs leading-relaxed mb-4">
+                                        혈액 내 <strong>Multi-panel Flow Cytometry</strong>를 통해 질병의 활성도를 실시간으로 점수화(Activity Scoring)하고, 재발(Flare) 가능성을 사전에 감지.
+                                    </p>
+                                    <div class="flex gap-2">
+                                        <span class="text-[10px] bg-white px-2 py-1 rounded border border-blue-200 text-blue-500">Immune Profiling</span>
+                                        <span class="text-[10px] bg-white px-2 py-1 rounded border border-blue-200 text-blue-500">Flare Prediction</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Infection (NEW) -->
+                <div class="bg-white overflow-hidden rounded-2xl shadow-md border border-slate-200">
+                    <div class="md:flex">
+                        <div class="md:w-1/4 bg-emerald-600 p-8 flex flex-col justify-start text-white">
+                            <span class="disease-tag bg-white text-emerald-600 mb-4 w-fit">Infection</span>
+                            <h3 class="text-3xl font-bold mb-2">감염 질환</h3>
+                            <p class="text-emerald-50 text-sm leading-relaxed">숙주 방어 체계 및 면역 기억 형성 연구</p>
+                        </div>
+                        <div class="md:w-3/4 p-8">
+                            <div class="grid md:grid-cols-2 gap-8">
+                                <div>
+                                    <h4 class="font-bold text-slate-800 mb-3 flex items-center gap-2">
+                                        <i data-lucide="shield" class="w-4 h-4 text-emerald-500"></i> 핵심 연구 주제
+                                    </h4>
+                                    <ul class="text-slate-600 text-sm space-y-3">
+                                        <li><strong class="text-slate-900">사이토카인 폭풍(Cytokine Storm):</strong> 급성 감염 시 면역 과잉 반응의 조절 기전을 멀티오믹스로 규명</li>
+                                        <li><strong class="text-slate-900">바이러스 잠복 및 재활성화:</strong> CMV/BK 바이러스 등이 면역 억제 상태에서 재활성화되는 분자적 신호 탐지</li>
+                                        <li><strong class="text-slate-900">백신 면역 기억:</strong> 장기적인 면역 보호 효과를 제공하는 기억 T/B세포의 형성 과정 분석</li>
+                                    </ul>
+                                </div>
+                                <div class="bg-emerald-50 p-6 rounded-xl border border-emerald-100">
+                                    <h4 class="font-bold text-slate-800 mb-3 flex items-center gap-2">
+                                        <i data-lucide="test-tube" class="w-4 h-4 text-emerald-500"></i> 숙주-병원체 상호작용
+                                    </h4>
+                                    <p class="text-slate-600 text-xs leading-relaxed mb-4">
+                                        병원체의 유전체 정보와 숙주의 전사체 정보를 동시에 분석(Dual RNA-seq)하여, 감염에 따른 <strong>신장 기능 손상</strong>의 직접적 원인 규명.
+                                    </p>
+                                    <div class="flex gap-2">
+                                        <span class="text-[10px] bg-white px-2 py-1 rounded border border-emerald-200 text-emerald-500">Dual RNA-seq</span>
+                                        <span class="text-[10px] bg-white px-2 py-1 rounded border border-emerald-200 text-emerald-500">Pathogen Discovery</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -208,7 +276,6 @@
             <p class="text-slate-500 mb-10">암, 자가면역, 감염 연구의 성과를 신장이식 임상에 적용하는 통합 솔루션</p>
 
             <div class="grid md:grid-cols-3 gap-8">
-                <!-- Strategy 1 -->
                 <div class="bg-white border border-slate-200 rounded-2xl p-8 relative overflow-hidden">
                     <div class="absolute top-0 right-0 p-4 opacity-10">
                         <i data-lucide="shield-check" class="w-20 h-20 text-blue-600"></i>
@@ -224,7 +291,6 @@
                     </div>
                 </div>
 
-                <!-- Strategy 2 -->
                 <div class="bg-white border border-slate-200 rounded-2xl p-8 relative overflow-hidden">
                     <div class="absolute top-0 right-0 p-4 opacity-10">
                         <i data-lucide="search" class="w-20 h-20 text-red-600"></i>
@@ -240,7 +306,6 @@
                     </div>
                 </div>
 
-                <!-- Strategy 3 -->
                 <div class="bg-white border border-slate-200 rounded-2xl p-8 relative overflow-hidden">
                     <div class="absolute top-0 right-0 p-4 opacity-10">
                         <i data-lucide="droplet" class="w-20 h-20 text-green-600"></i>
@@ -274,18 +339,15 @@
 
         // SPA Navigation Logic
         function showSection(sectionId) {
-            // Hide all sections
             const sections = ['home', 'methods', 'diseases', 'benchmarking'];
             sections.forEach(id => {
                 document.getElementById(id).classList.add('hidden');
                 document.getElementById('nav-' + id).classList.remove('active');
             });
 
-            // Show target section
             document.getElementById(sectionId).classList.remove('hidden');
             document.getElementById('nav-' + sectionId).classList.add('active');
 
-            // Scroll to top
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     </script>
