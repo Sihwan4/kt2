@@ -1,0 +1,67 @@
+name: Auto Update Index HTML  # 워크플로 이름
+
+on:
+  push:
+    branches:
+      - main  # main 브랜치에 푸시가 발생할 때 실행
+      
+permissions:
+  contents: write # 리포지토리 파일에 대한 쓰기 권한을 부여
+  
+jobs:
+  generate_index:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Generate and Update index.html
+        id: generate
+        run: |
+          # 리포지토리의 최상위 디렉토리를 탐색하여 폴더 목록을 자동으로 생성합니다.
+          # '.'는 현재 디렉토리를 의미하며, type d (디렉토리)인 항목만 찾습니다.
+          # .git과 .github 폴더는 제외합니다.
+          
+          # 폴더 목록을 배열에 저장 (정렬 후)
+          DIRS=($(find . -maxdepth 1 -type d -not -name "." -not -name ".git" -not -name ".github" | sort))
+          
+          LIST_ITEMS=""
+          for DIR_PATH in "${DIRS[@]}"; do
+            DIR_NAME=$(basename "$DIR_PATH") # './b' -> 'b'
+            # 링크 텍스트는 폴더 이름을 사용합니다.
+            LIST_ITEMS="${LIST_ITEMS}        <li><a href=\"${DIR_NAME}/\">${DIR_NAME} Report</a></li>\n"
+          done
+
+          # 2. 새로운 index.html 파일 내용 생성
+          NEW_INDEX=$(cat <<EOF
+          <!DOCTYPE html>
+          <html>
+          <head>
+              <title>연구 보고서 목록</title>
+          </head>
+          <body>
+              <h1>연구 보고서 목록</h1>
+              <ul>
+          ${LIST_ITEMS}
+              </ul>
+          </body>
+          </html>
+          EOF
+          )
+          
+          # 3. 변경 사항이 있는지 확인하고 index.html에 작성
+          if [ ! -f index.html ] || [ "$(cat index.html)" != "$NEW_INDEX" ]; then
+            echo -e "$NEW_INDEX" > index.html
+            echo "changed=true" >> $GITHUB_OUTPUT
+          else
+            echo "changed=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Commit and Push changes
+        if: steps.generate.outputs.changed == 'true'
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: 'Auto: Update index.html with latest directory list'
+          file_pattern: 'index.html'
+          branch: main
