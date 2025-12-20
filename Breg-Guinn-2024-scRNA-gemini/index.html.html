@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B세포 기반 신장 이식 면역 관용 연구 - 결과 상세</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;700&display=swap');
+        body { font-family: 'Pretendard', sans-serif; scroll-behavior: smooth; }
+        .section-card { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .section-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1); }
+        .data-badge { @apply bg-blue-100 text-blue-700 px-2 py-1 rounded text-[10px] font-bold uppercase; }
+        .result-highlight { @apply border-l-4 border-blue-500 pl-4 py-2 bg-blue-50/50 my-4; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900">
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full bg-white/80 backdrop-blur-md border-b border-slate-200 z-50">
+        <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-2 font-bold text-blue-600">
+                <i data-lucide="microscope"></i>
+                <span class="hidden sm:inline text-lg">ImmunoAnalysis 2024</span>
+            </div>
+            <div class="flex gap-3 md:gap-6 text-xs md:text-sm font-medium">
+                <a href="#overview" class="hover:text-blue-600 transition">개요</a>
+                <a href="#methods" class="hover:text-blue-600 transition">방법론</a>
+                <a href="#results-deep" class="hover:text-blue-600 transition font-bold">결과상세</a>
+                <a href="#subsets" class="hover:text-blue-600 transition">분화경로</a>
+                <a href="#glossary" class="hover:text-blue-600 transition">용어</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="pt-32 pb-20 px-4 bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-955 text-white text-center">
+        <div class="max-w-4xl mx-auto">
+            <div class="inline-block bg-blue-500/20 text-blue-400 px-4 py-1 rounded-full text-xs font-bold mb-6 tracking-widest border border-blue-500/30">
+                SC-RNA SEQ ANALYSIS REPORT
+            </div>
+            <h1 class="text-3xl md:text-5xl font-extrabold mb-6 leading-tight">
+                신장 이식 면역 관용 발달 중 <br class="hidden md:block text-blue-400"> B세포 분화 및 조절 기전 규명
+            </h1>
+            <p class="text-slate-300 text-lg mb-8 max-w-2xl mx-auto">
+                이식편 내 3차 림프구 구조(TLOS)에서 발생하는 <br class="md:hidden"> <b>T세포 → B세포</b>로의 우세성 전이와 조절 시그니처 분석
+            </p>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 py-12 space-y-32">
+
+        <!-- 1. 연구 개요 & 대식세포 재프로그래밍 -->
+        <section id="overview" class="grid md:grid-cols-2 gap-16 items-center">
+            <div class="space-y-6">
+                <h2 class="text-3xl font-bold flex items-center gap-3">
+                    <i data-lucide="book-open" class="text-blue-600"></i> 연구 배경 및 핵심 질문
+                </h2>
+                <div class="text-slate-600 leading-relaxed space-y-4 text-base">
+                    <p>본 연구는 신장 이식 수용 모델(Accepted)과 거부 모델(Rejected)을 비교하여 <b>어떤 세포가 면역 관용의 장기 유지에 기여하는지</b>를 추적했습니다.</p>
+                    <div class="result-highlight">
+                        <p class="text-sm font-bold text-slate-800">초기 환경의 변화 (Macrophage Transition)</p>
+                        <p class="text-sm">이식 1주차에는 염증성 <b>M1 대식세포</b>가 침윤되나, 수용 모델에서는 3주차부터 <b>M2 대식세포</b>($ApoE$, $Irf4$, $Selenop$ 등 발현)로 재프로그래밍되어 관용 유도 환경을 조성합니다.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white p-8 rounded-3xl border border-slate-200 shadow-xl relative">
+                <h3 class="font-bold text-slate-800 mb-6 flex items-center gap-2">
+                    <i data-lucide="git-merge" class="text-indigo-500"></i> 면역 세포의 시간적 전이 (Temporal Shift)
+                </h3>
+                <div class="space-y-6">
+                    <div class="flex items-center gap-4">
+                        <span class="w-16 text-xs font-bold text-slate-400">초기 (1주)</span>
+                        <div class="flex-1 h-10 bg-slate-100 rounded-xl flex items-center px-4 font-bold text-xs text-blue-600 border border-blue-100">
+                            T세포 & Myeloid 중심의 염증 환경
+                        </div>
+                    </div>
+                    <div class="flex justify-center py-2">
+                        <i data-lucide="chevrons-down" class="text-slate-300"></i>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <span class="w-16 text-xs font-bold text-slate-400">장기 (6개월)</span>
+                        <div class="flex-1 h-10 bg-indigo-600 rounded-xl flex items-center px-4 font-bold text-xs text-white shadow-lg">
+                            B세포 풍부 (70%+) & 조절 시그니처 확립
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. 결과 상세 (Detailed Results) -->
+        <section id="results-deep" class="space-y-12">
+            <div class="text-center">
+                <h2 class="text-3xl font-bold mb-4 italic text-slate-800 tracking-tight">DETAILED SCIENTIFIC FINDINGS</h2>
+                <div class="h-1 w-20 bg-blue-600 mx-auto rounded-full"></div>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Data Card 1: Quantitative Shift -->
+                <div class="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm section-card">
+                    <div class="w-12 h-12 bg-blue-100 rounded-2xl flex items-center justify-center text-blue-600 mb-6">
+                        <i data-lucide="pie-chart"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">정량적 세포 비중 변화</h3>
+                    <p class="text-sm text-slate-500 mb-4 leading-relaxed">CD45+ 면역세포 중 B세포의 비중이 비약적으로 증가합니다 (scRNA-seq & 유세포 분석 데이터).</p>
+                    <ul class="space-y-3 text-sm">
+                        <li class="flex justify-between items-center bg-slate-50 p-2 rounded">
+                            <span class="font-medium">이식 1주</span> <span class="text-blue-600 font-bold">약 7%</span>
+                        </li>
+                        <li class="flex justify-between items-center bg-slate-50 p-2 rounded">
+                            <span class="font-medium">이식 3주</span> <span class="text-blue-600 font-bold">약 20%</span>
+                        </li>
+                        <li class="flex justify-between items-center bg-indigo-50 p-2 rounded border border-indigo-100">
+                            <span class="font-medium">이식 5~6개월</span> <span class="text-indigo-600 font-extrabold text-lg">74%</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Data Card 2: Siglec-G & Antibody Control -->
+                <div class="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm section-card">
+                    <div class="w-12 h-12 bg-red-100 rounded-2xl flex items-center justify-center text-red-600 mb-6">
+                        <i data-lucide="shield-alert"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">Siglec-G: 항체 생산 억제</h3>
+                    <p class="text-sm text-slate-500 mb-4 leading-relaxed">B세포의 항체 분비를 억제하는 핵심 수용체인 Siglec-G의 발현이 관용의 열쇠입니다.</p>
+                    <div class="space-y-4">
+                        <div class="p-3 bg-red-50 rounded-lg border border-red-100">
+                            <p class="text-[10px] text-red-400 font-bold uppercase mb-1">Functional Impact</p>
+                            <p class="text-xs text-red-700 leading-tight">Siglec-G 결핍 모델에서 IgM 농도가 **10배 이상** 증가하며 면역 관용이 붕괴됨을 확인.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Data Card 3: Treg to Breg Transition -->
+                <div class="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm section-card">
+                    <div class="w-12 h-12 bg-green-100 rounded-2xl flex items-center justify-center text-green-600 mb-6">
+                        <i data-lucide="zap"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">Treg → Breg 주도권 전이</h3>
+                    <p class="text-sm text-slate-500 mb-4 leading-relaxed">Foxp3-DTR 마우스를 이용한 Treg 제거 실험을 통해 조절 기전의 변화를 입증했습니다.</p>
+                    <div class="space-y-3">
+                        <div class="flex gap-3 items-start">
+                            <div class="w-4 h-4 rounded-full bg-red-400 mt-1"></div>
+                            <p class="text-xs text-slate-600"><b>초기 제거(3-5주):</b> 10일 내 급성 거부 발생.</p>
+                        </div>
+                        <div class="flex gap-3 items-start">
+                            <div class="w-4 h-4 rounded-full bg-blue-400 mt-1"></div>
+                            <p class="text-xs text-slate-600"><b>후기 제거(24주):</b> 거부 반응이 없거나 매우 느림.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. B세포 하위 집단 상세 분석 (Subsets & Trajectory) -->
+        <section id="subsets" class="space-y-12">
+            <div class="bg-slate-900 rounded-[3rem] p-8 md:p-16 text-white overflow-hidden relative">
+                <div class="relative z-10">
+                    <h2 class="text-3xl font-bold mb-8 flex items-center gap-3">
+                        <i data-lucide="layers" class="text-blue-400"></i> scRNA-seq 기반 B세포 분화 궤적
+                    </h2>
+                    
+                    <div class="grid lg:grid-cols-2 gap-12 mb-16">
+                        <div class="space-y-6">
+                            <p class="text-slate-300 leading-relaxed text-sm">
+                                Monocle 3를 이용한 궤적 분석은 이식편 내부에서 전구체 B세포가 어떻게 다양한 기억 B세포 상태로 진화하는지 보여줍니다. 
+                                아래 이미지는 실제 분석 데이터(Figure 4)로, 세포의 분화 방향과 '의사시간(Pseudotime)'을 시각화한 것입니다.
+                            </p>
+                            <!-- Figure 4 Image Insertion -->
+                            <div class="bg-white/5 p-4 rounded-3xl border border-white/10 shadow-inner">
+                                <img src="https://cdn.ncbi.nlm.nih.gov/pmc/blobs/f4f8/11232115/b6d5d483cf5b/nihms-1998438-f0004.jpg" 
+                                     alt="[신장 이식편 내 B세포 분화 궤적 분석 이미지]" 
+                                     class="w-full h-auto rounded-2xl shadow-lg brightness-95 contrast-105"
+                                     onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                                <div class="hidden p-8 text-center text-slate-500 bg-slate-800/50 rounded-2xl border border-dashed border-slate-600">
+                                    <i data-lucide="image-off" class="mx-auto mb-2 opacity-50"></i>
+                                    이미지를 불러올 수 없습니다. (Figure 4: Trajectory Analysis)
+                                </div>
+                                <p class="text-[10px] text-slate-500 mt-4 text-center italic tracking-wide">
+                                    Figure 4. Single-cell RNA sequencing trajectory analysis of B cells (Guinn et al. 2024)
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="bg-white/5 border border-white/10 p-5 rounded-2xl backdrop-blur-md">
+                                <h4 class="font-bold text-blue-400 text-sm mb-2">Follicular Memory</h4>
+                                <p class="text-[11px] text-slate-300">이식편 내 주류 집단 (약 70%). 관용 유지의 핵심.</p>
+                            </div>
+                            <div class="bg-white/5 border border-white/10 p-5 rounded-2xl backdrop-blur-md">
+                                <h4 class="font-bold text-indigo-400 text-sm mb-2">Transitional Memory</h4>
+                                <p class="text-[11px] text-slate-300">가장 빠른 분화 속도를 보이는 과도기 세포군.</p>
+                            </div>
+                            <div class="bg-white/5 border border-white/10 p-5 rounded-2xl backdrop-blur-md">
+                                <h4 class="font-bold text-slate-400 text-sm mb-2">Precursor B Cells</h4>
+                                <p class="text-[11px] text-slate-300">이식편 유입의 기점(Root). $Vpreb3$ 고발현.</p>
+                            </div>
+                            <div class="bg-white/5 border border-white/10 p-5 rounded-2xl backdrop-blur-md">
+                                <h4 class="font-bold text-orange-400 text-sm mb-2">Age-associated Memory</h4>
+                                <p class="text-[11px] text-slate-300">시간 경과에 따라 증가하는 노화 기억 세포.</p>
+                            </div>
+                            <div class="bg-white/5 border border-white/10 p-5 rounded-2xl backdrop-blur-md">
+                                <h4 class="font-bold text-purple-400 text-sm mb-2">Plasma Cells</h4>
+                                <p class="text-[11px] text-slate-300">항체 생산을 담당하나 Siglec-G에 의해 억제됨.</p>
+                            </div>
+                            <div class="bg-white/5 border border-white/10 p-5 rounded-2xl backdrop-blur-md">
+                                <h4 class="font-bold text-emerald-400 text-sm mb-2">CD225+ B cells</h4>
+                                <p class="text-[11px] text-slate-300">특정 면역 반응에 관여하는 초기 유입 집단.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <i data-lucide="dna" class="absolute -right-24 -bottom-24 w-96 h-96 text-white/5"></i>
+            </div>
+        </section>
+
+        <!-- 4. 분자 시그니처 (BCR & Breg) -->
+        <section id="signature" class="grid md:grid-cols-2 gap-12">
+            <div class="space-y-8">
+                <h3 class="text-2xl font-bold flex items-center gap-2">
+                    <i data-lucide="microscope" class="text-blue-600"></i> BCR Signaling 활성화
+                </h3>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="bg-white border border-slate-200 p-4 rounded-xl shadow-sm">
+                        <span class="data-badge mb-2 block w-max">Survival</span>
+                        <p class="font-bold text-lg">Bcl2</p>
+                    </div>
+                    <div class="bg-white border border-slate-200 p-4 rounded-xl shadow-sm">
+                        <span class="data-badge mb-2 block w-max">Transducer</span>
+                        <p class="font-bold text-lg">Syk & Lyn</p>
+                    </div>
+                    <div class="bg-white border border-slate-200 p-4 rounded-xl shadow-sm">
+                        <span class="data-badge mb-2 block w-max">Regulation</span>
+                        <p class="font-bold text-lg">Cd22 & Cd72</p>
+                    </div>
+                    <div class="bg-white border border-slate-200 p-4 rounded-xl shadow-sm">
+                        <span class="data-badge mb-2 block w-max">Transcription</span>
+                        <p class="font-bold text-lg">Pou2f2</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-blue-600 rounded-[3rem] p-10 text-white flex flex-col justify-center">
+                <h3 class="text-2xl font-bold mb-6 flex items-center gap-2 text-blue-100">
+                    <i data-lucide="activity"></i> TIM-1 (Haver1) 시그니처
+                </h3>
+                <div class="space-y-6">
+                    <p class="text-blue-100/80 text-sm leading-relaxed">Haver1(TIM-1)은 조절 B세포(Breg)의 가장 신뢰할 수 있는 마커입니다.</p>
+                    <div class="bg-white/10 p-5 rounded-2xl border border-white/20">
+                        <p class="text-sm">이식 6개월 시점, 수용 모델의 과도기 및 여포 기억 B세포에서 TIM-1 발현이 최고조에 달합니다.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. 방법론 (Methodology) -->
+        <section id="methods" class="pt-16 border-t border-slate-200">
+            <h2 class="text-2xl font-bold mb-8 flex items-center gap-2 text-slate-800">
+                <i data-lucide="terminal" class="text-slate-400"></i> 연구 방법론 요약
+            </h2>
+            <div class="grid md:grid-cols-3 gap-8 text-sm">
+                <div class="space-y-3">
+                    <h4 class="font-bold text-blue-600 uppercase text-xs tracking-widest">Organ & Models</h4>
+                    <p class="text-slate-500 leading-relaxed">수혜자(B6)와 기증자(DBA/2)의 대동맥/하대정맥 단측 문합 수술을 통해 이식 수행.</p>
+                </div>
+                <div class="space-y-3">
+                    <h4 class="font-bold text-blue-600 uppercase text-xs tracking-widest">Cell Analysis</h4>
+                    <p class="text-slate-500 leading-relaxed">CD45+ 세포 FACS 정렬. 10x Genomics scRNA-seq 및 Seurat 통합 분석.</p>
+                </div>
+                <div class="space-y-3">
+                    <h4 class="font-bold text-blue-600 uppercase text-xs tracking-widest">Validation</h4>
+                    <p class="text-slate-500 leading-relaxed">NanoString Bulk RNA 정량 분석 및 유세포 분석을 통한 단백질 수준 검증.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. 용어 사전 (Glossary) -->
+        <section id="glossary" class="pt-12">
+            <div class="bg-slate-50 p-8 rounded-3xl border border-slate-200">
+                <h2 class="text-xl font-bold mb-6 flex items-center gap-2">
+                    <i data-lucide="help-circle" class="text-slate-400"></i> 주요 용어 해설
+                </h2>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 text-xs">
+                    <div class="p-4 bg-white rounded-xl border border-slate-100">
+                        <span class="font-bold text-blue-600 block mb-1">TLOS / TOLS</span>
+                        <p class="text-slate-500">Tertiary Lymphoid Organ-like Structures. 이식편 내부에 생성된 면역 조직.</p>
+                    </div>
+                    <div class="p-4 bg-white rounded-xl border border-slate-100">
+                        <span class="font-bold text-blue-600 block mb-1">Breg (Regulatory B cells)</span>
+                        <p class="text-slate-500">면역 반응을 억제하고 관용을 유지하는 조절 기능 B세포.</p>
+                    </div>
+                    <div class="p-4 bg-white rounded-xl border border-slate-100">
+                        <span class="font-bold text-blue-600 block mb-1">Pseudotime (의사시간)</span>
+                        <p class="text-slate-500">유전자 발현 변화의 궤적을 가상의 시간 순서로 재구성한 축.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-slate-100 border-t border-slate-200 py-16 px-4">
+        <div class="max-w-6xl mx-auto text-center">
+            <p class="text-slate-500 text-sm mb-2 font-medium">
+                Research: Guinn et al. (2024) - Intragraft B cell differentiation and tolerance.
+            </p>
+            <p class="text-slate-400 text-[10px] uppercase tracking-widest font-bold">
+                Advanced Immuno-Visualization Tool v3.1
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+
+        // Enhanced smooth navigation
+        window.addEventListener('scroll', () => {
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('nav a');
+            
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= sectionTop - 200) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('text-blue-600', 'font-bold');
+                if (link.getAttribute('href').includes(current)) {
+                    link.classList.add('text-blue-600', 'font-bold');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
