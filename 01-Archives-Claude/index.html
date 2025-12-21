@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>신장이식 면역학 연구 포털</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            font-size: 2.5em;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .search-box {
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 15px 50px 15px 20px;
+            font-size: 1em;
+            border: 2px solid #ddd;
+            border-radius: 50px;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .search-box input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.3);
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #667eea;
+            font-size: 1.2em;
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .filter-tab {
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.95em;
+        }
+
+        .filter-tab:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .filter-tab.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .papers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .paper-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .paper-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transform: scaleX(0);
+            transition: transform 0.3s;
+        }
+
+        .paper-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .paper-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .paper-number {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .paper-title {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+
+        .paper-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 15px 0;
+        }
+
+        .tag {
+            padding: 5px 12px;
+            background: #f0f0f0;
+            border-radius: 15px;
+            font-size: 0.8em;
+            color: #666;
+        }
+
+        .tag.highlight {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .paper-summary {
+            color: #666;
+            font-size: 0.95em;
+            margin-top: 10px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: white;
+            max-width: 900px;
+            margin: 20px auto;
+            border-radius: 20px;
+            padding: 40px;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 2em;
+            cursor: pointer;
+            color: #999;
+            transition: color 0.3s;
+        }
+
+        .close-btn:hover {
+            color: #333;
+        }
+
+        .modal-title {
+            font-size: 1.8em;
+            color: #667eea;
+            margin-bottom: 20px;
+            padding-right: 40px;
+        }
+
+        .modal-section {
+            margin: 25px 0;
+        }
+
+        .modal-section h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 10px;
+        }
+
+        .modal-section p, .modal-section ul {
+            color: #555;
+            line-height: 1.8;
+        }
+
+        .modal-section ul {
+            padding-left: 25px;
+            margin-top: 10px;
+        }
+
+        .modal-section li {
+            margin: 8px 0;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 15px 25px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 60px 20px;
+            background: white;
+            border-radius: 15px;
+            color: #999;
+            font-size: 1.2em;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .papers-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                padding: 30px 20px;
+            }
+
+            .stats {
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🏥 신장이식 면역학 연구 포털</h1>
+            <p class="subtitle">최신 신장이식 면역학 연구 논문 20편 종합 분석</p>
+            
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-number">20</div>
+                    <div class="stat-label">연구 논문</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">7</div>
+                    <div class="stat-label">주요 기법</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">100%</div>
+                    <div class="stat-label">전문가 검증</div>
+                </div>
+            </div>
+
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="논문 제목, 키워드로 검색...">
+                <span class="search-icon">🔍</span>
+            </div>
+
+            <div class="filter-tabs">
+                <button class="filter-tab active" data-filter="all">전체</button>
+                <button class="filter-tab" data-filter="cytof">CyTOF</button>
+                <button class="filter-tab" data-filter="tcell">T세포</button>
+                <button class="filter-tab" data-filter="nk">NK세포</button>
+                <button class="filter-tab" data-filter="rejection">거부반응</button>
+                <button class="filter-tab" data-filter="biomarker">바이오마커</button>
+            </div>
+        </header>
+
+        <div class="papers-grid" id="papersGrid"></div>
+        <div class="no-results" id="noResults" style="display: none;">
+            검색 결과가 없습니다.
+        </div>
+    </div>
+
+    <div class="modal" id="paperModal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <script>
+        const papers = [
+            {
+                id: 1,
+                title: "신장이식 후 지속되는 림프구 감소증: 사망률 증가 및 항상성 기전의 저하",
+                tags: ["림프구감소증", "CyTOF", "면역항상성", "사망률"],
+                category: ["cytof", "biomarker"],
+                summary: "신장이식 후 3년 시점에서 31%의 환자에게서 지속적인 림프구 감소증이 관찰되었으며, T/B/NK 세포 전반의 항상성 유지 기전이 손상됨을 CyTOF로 규명",
+                methodology: "7,307명의 신장이식 환자 대상 후향적 분석, Mass Cytometry (CyTOF)를 활용한 면역 표현형 정밀 분석",
+                results: [
+                    "이식 3년 후 31%의 환자에서 림프구 감소증 지속",
+                    "림프구 감소증의 정도가 심할수록 사망 위험 유의미하게 증가",
+                    "Recent Thymic Emigrants, Naive T세포, Tscm 수 감소로 항상성 유지 기전 장애 확인",
+                    "PD-1 발현 증가로 면역 소진 징후 관찰"
+                ],
+                significance: "이식 환자의 장기 예후 결정 요소로서 '면역 체계의 회복력'에 주목하여, 지속성 림프구 감소증을 환자 개별 맞춤 관리를 위한 중요한 생체지표로 제시"
+            },
+            {
+                id: 2,
+                title: "항-Integrin α4β7 Vedolizumab이 세포 교차시험에 미치는 간섭 해독",
+                tags: ["Vedolizumab", "교차시험", "위양성", "IBD"],
+                category: ["biomarker"],
+                summary: "IBD 치료제 Vedolizumab이 T세포 교차시험에서 위양성을 일으킬 수 있음을 규명하고, Pronase 처리로 간섭 제거 가능함을 입증",
+                methodology: "VDZ 치료 중인 장기이식 대기 환자 2명 대상, FCXM 및 Luminex DSA 분석, Pronase 처리 검증",
+                results: [
+                    "DSA 음성임에도 T세포 FCXM에서 위양성 결과 (1.6~4.4배)",
+                    "Integrin α4β7 발현 특정 소수 T세포군에 VDZ 결합으로 형광 강도 변화",
+                    "Pronase 처리로 위양성 반응 완전 소실",
+                    "CDC-XM 및 IgM FCXM에서는 간섭 없음"
+                ],
+                significance: "이식의료진은 IBD 환자의 교차시험 결과가 예상치 못하게 양성일 경우 VDZ 복용 여부를 반드시 확인하고 Pronase 처리 후 재검사 시행 권장"
+            },
+            {
+                id: 3,
+                title: "인간 신장이식편에서 급성 신손상 후 상피-면역-기질 상호작용이 정의하는 회복과 섬유화 경로",
+                tags: ["급성신손상", "섬유화", "상피세포", "snRNA-seq"],
+                category: ["biomarker"],
+                summary: "이식 후 AKI가 정상 회복 또는 만성 섬유화로 진행되는 경로를 상피-면역-기질 세포 간 상호작용 관점에서 단일 세포 수준으로 분석",
+                methodology: "이식 후 8주 이내 생검 조직 대상 snRNA-seq 및 Imaging Mass Cytometry (IMC) 분석",
+                results: [
+                    "회복군: 재생성 PT 세포 풍부, M2 대식세포와 조절 면역 우세",
+                    "비회복군: 탈분화된 이행기 PT 세포, 근섬유아세포로의 전환 가속",
+                    "손상 세뇨관-활성 섬유아세포-염증세포의 공간적 밀집 확인",
+                    "PAX8 결핍 시 상피 증식 억제 및 전염증 신호 강화"
+                ],
+                significance: "상피 세포의 가소성이 이식 후 AKI 회복 향방을 결정하며, 비정상적 상피-면역-기질 교차 대화가 만성 섬유화의 원인임을 규명하여 새로운 치료 타겟 제시"
+            },
+            {
+                id: 4,
+                title: "Mass Cytometry를 이용한 성인 신장이식 수혜자의 말초혈액 면역 표현형 특성 분석",
+                tags: ["CyTOF", "면역표현형", "CD8+ T세포", "조절T세포"],
+                category: ["cytof", "tcell"],
+                summary: "이식 후 6개월간 환자의 면역 상태를 CyTOF로 정밀 분석하여, 면역억제제 투여 상황에서도 특정 세포군은 활성화된 복합적 상태임을 확인",
+                methodology: "신장이식 환자 10명 및 건강 대조군 11명 대상, Mass Cytometry (CyTOF) 활용, 6개월 종단적 관찰",
+                results: [
+                    "CD8+ T세포: CD57+, MIP-1β, IFN-γ 생성 유의미하게 증가",
+                    "CD107a 및 Granzyme B 발현이 CD8+ T세포와 CD56bright NK세포에서 증가",
+                    "조절 T세포: IL-10 생성 감소로 전염증성 환경 조성",
+                    "γδT세포 및 CD8+ 기억 T세포: 특정 사이토카인 발현 감소"
+                ],
+                significance: "이식 환자의 면역 상태는 단순 억제가 아닌, 특정 세포군(CD8+ T, NK)은 활성화된 복합 상태로, 환자 맞춤형 치료 전략 최적화를 위한 포괄적 면역 프로파일링 중요성 강조"
+            },
+            {
+                id: 5,
+                title: "신장이식 수혜자에서 동종 MSC 주입이 4시간 이내 뚜렷한 B세포 및 T세포 표현형 촉진",
+                tags: ["MSC", "면역조절", "CyTOF", "세포치료"],
+                category: ["cytof", "tcell", "biomarker"],
+                summary: "동종 골수 유래 MSC 주입이 면역세포에 미치는 즉각적 및 장기적 변화를 CyTOF로 분석하여, 주입 4시간 내 특이적 면역조절 표현형 유도 확인",
+                methodology: "신장이식 환자 10명 대상 Neptune 임상 1b상, 이식 후 25-26주차 MSC 주입, CyTOF 40개 항체 패널 분석",
+                results: [
+                    "장기적(27~52주): 주요 면역세포군 변화 미미로 안전성 확인",
+                    "즉각적(4시간 이내): 특정 B세포 및 T세포 군집 유의미 증가",
+                    "증가 세포 표현형: CD11b+, CD11c+, CD38+, CD39+, Ki-67+",
+                    "면역조절(CD38, CD39) 및 증식(Ki-67) 마커 동시 발현"
+                ],
+                significance: "MSC 주입이 전체 면역세포 수보다 주입 직후 매우 특이적인 면역조절 표현형(CD11b/c, CD38, CD39) B세포와 T세포 활성화를 유도함을 정밀 분석으로 규명"
+            },
+            {
+                id: 6,
+                title: "신장이식 수혜자의 거대세포바이러스 감염 예방과 관련된 순환 NK-T세포 아형 발견",
+                tags: ["CMV", "NK-T세포", "CyTOF", "감염예방"],
+                category: ["cytof", "nk", "biomarker"],
+                summary: "CMV 혈청 양성 신장이식 환자 112개 시계열 샘플 분석으로 CMV 감염 보호와 관련된 새로운 CD11b+ NK-T세포 아형 발견",
+                methodology: "112개 시계열 혈액 샘플, Mass Cytometry (CyTOF), 비지도 딥러닝 분석, 2개 독립 외부 코호트 검증",
+                results: [
+                    "감염 발생군: CMV 특이적 세포 매개 면역(CMI) 빈도 현저히 낮음",
+                    "일반 CD3+CD8mid CD56+ NK-T세포: 낮은 CMI 및 감염 발생과 강한 상관관계",
+                    "보호 지표(핵심): CD11b 표면 마커 공유 3가지 특정 NK-T세포 아형",
+                    "CD11b+ NK-T 세포: 강력한 항바이러스 CMI 반응 보임"
+                ],
+                significance: "신장이식 후 CMV 감염 보호에 핵심적인 새로운 NK-T세포 아형(CD11b+ NK-T) 동역학을 처음으로 규명하여, 감염 위험 예측 바이오마커 및 새로운 항바이러스 치료 전략 기여"
+            },
+            {
+                id: 7,
+                title: "신장이식 환자의 Tacrolimus 및 Rapamycin 장기 복용에 따른 T세포 면역 표현형 심층 분석",
+                tags: ["Tacrolimus", "Rapamycin", "CyTOF", "T세포"],
+                category: ["cytof", "tcell"],
+                summary: "신장이식 후 장기간 면역억제제 복용 시 Tacrolimus vs Rapamycin이 T세포 면역 체계를 어떻게 다르게 조형하는지 CyTOF로 규명",
+                methodology: "이식 후 3년 이상 면역억제제 복용 환자 대상, 발견 코호트 30명(CyTOF), 검증 코호트 100명",
+                results: [
+                    "Tacrolimus군: 노화 CD8+ CD57+ T세포 증가, TCR 신호 반응성 저하, 이식장기 수용성 우세",
+                    "Rapamycin군: 조절 T세포 강화(최대 2배), CTLA-4 발현 높음, TCR 신호 전달 감도 유지",
+                    "Rapamycin군: 항종양/항감염 면역 반응 재활성화 잠재력 보유",
+                    "임상 검증: Rapamycin 복용군이 종양 발생 및 감염 빈도 실제로 낮음"
+                ],
+                significance: "약제별로 장기적으로 T세포 면역 체계의 질적 변화(노화 vs 조절세포 증가)가 다르게 나타남을 고해상도 CyTOF로 증명하여, 환자 맞춤형 정밀 의료 구현 지표 제공"
+            },
+            {
+                id: 8,
+                title: "신장이식 수혜 임신부의 모체, 탈락막 및 신생아 림프구 구성 변화 연구",
+                tags: ["임신", "면역", "조절T세포", "신생아"],
+                category: ["tcell", "biomarker"],
+                summary: "신장이식을 받은 임신부와 태아를 대상으로, 면역억제제 노출이 모체 전신 및 자궁 내 면역과 신생아 면역세포 구성에 미치는 영향 분석",
+                methodology: "신장이식 수혜 임신부 및 건강 임신부 코호트, 모체 말초혈액, 탈락막 조직, 제대혈 다중 파라미터 flow cytometry 분석",
+                results: [
+                    "모체 전신 면역: 이식 환자들은 대조군과 면역세포 빈도 차이, 임신 진행 동역학은 유사",
+                    "자궁 내 면역(탈락막): HLA-DR+ 조절 Treg 빈도 유의미 감소, 특히 Tacrolimus 단독 투여군에서 뚜렷",
+                    "신생아 면역(제대혈): 선천 및 적응 면역계 모두에서 상당한 변화 관찰",
+                    "자궁 내 면역억제제 노출이 태아 면역 발달에 직접적 영향"
+                ],
+                significance: "신장이식은 임신부의 전신 및 자궁 내 면역 환경뿐 아니라 신생아의 면역 체계에도 독특하고 유의미한 영향을 미치며, 이는 임신 합병증 및 출생 후 자녀 장기 건강에 중요한 영향 가능"
+            },
+            {
+                id: 9,
+                title: "Flow Cytometry 교차시험 및 DNA 기반 HLA 검사를 통한 소아 신장이식 후 5년 추적 사례",
+                tags: ["소아이식", "FCXM", "HLA", "장기생존"],
+                category: ["biomarker"],
+                summary: "기존 CDC 대신 고민감도 FCXM과 DNA 기반 HLA 분석을 선별 검사로 활용한 소아 신장이식의 5년 장기 예후 분석",
+                methodology: "소아 환자 신장이식, FCXM 및 DNA 기반 HLA 면역표현형 분석, 5년 추적 관찰",
+                results: [
+                    "이식 후 5년 시점 매우 양호한 예후: 혈청 크레아티닌 1.5~2 mg/dL 안정 유지",
+                    "요소 및 전해질 수치 정상 범위",
+                    "합병증 없이 정상적인 일상생활",
+                    "고민감도 선별 검사가 장기 생존율 확보에 효과적"
+                ],
+                significance: "고민감도 선별 검사(FCXM 및 DNA 기반 HLA 분석)를 활용한 신장이식은 소아 환자의 장기 생존 및 삶의 질 개선에 긍정적 결과를 가져왔으며, 이식 전 정밀 검사가 장기적 이식 성공의 핵심 요소임을 시사"
+            },
+            {
+                id: 10,
+                title: "Muromonab-CD3 치료 병력이 있는 환자의 말초 T세포 림프종 면역표현형: 진단적 딜레마",
+                tags: ["OKT3", "림프종", "CD3", "진단"],
+                category: ["biomarker"],
+                summary: "이식 거부반응 억제제 Muromonab-CD3 치료를 받았던 환자에서 발생한 말초 T세포 림프종의 진단적 특성 분석",
+                methodology: "과거 장기이식 후 Muromonab-CD3 투여 병력 환자 사례, 병리 조직 검사, 면역표현형 분석(Flow cytometry, IHC), TCR 유전자 재배열 검사",
+                results: [
+                    "표면 CD3 발현 소실/감소로 진단 곤란",
+                    "세포질 내 CD3는 양성으로 T세포 유래 증명",
+                    "CD3 외 다른 T세포 표지자의 비정상적 발현 관찰",
+                    "과거 항-CD3 단클론 항체가 T세포 표면 CD3 수용체를 내재화시키거나 선택적 압력 가능성"
+                ],
+                significance: "표적 항체 치료 병력이 있는 환자에서 림프종 의심 시 일반적인 표면 항원 검사만으로는 위음성이 나올 수 있으므로, 세포질 내 항원 검사 및 분자 유전학 검사 병행 필수"
+            },
+            {
+                id: 11,
+                title: "신장이식 환자의 활성 조절 T세포 감소와 급성 거부반응의 연관성",
+                tags: ["조절T세포", "급성거부반응", "aTreg", "면역조절"],
+                category: ["tcell", "rejection", "biomarker"],
+                summary: "이식 후 조절 T세포의 다양한 하위 집단 중 특히 활성 조절 T세포(aTreg)의 감소가 급성 거부반응과 밀접한 관련이 있음을 규명",
+                methodology: "58명(급성 거부반응 19명, 안정 환자 39명, 건강 대조군) 대상 유세포 분석기로 Treg 하위 집단 분석",
+                results: [
+                    "급성 거부반응군: CD4+ CD25++ CD45RA- Foxp3hi aTreg 빈도 및 비율 유의미 감소 (p<0.05)",
+                    "이식 안정군: 건강 대조군보다 aTreg/Treg 비율 더 높음",
+                    "전체 Treg 대비 작동 T세포 비율은 유의한 차이 없음",
+                    "활성화 상태(aTreg)의 비중이 거부반응과 더 밀접"
+                ],
+                significance: "단순한 조절 T세포의 양적 측정보다 질적 분화 상태(Activated vs Resting) 파악이 이식 면역학적 예후 판정에 더 정밀한 지표가 될 수 있음을 입증"
+            },
+            {
+                id: 12,
+                title: "신장 이식 거부반응에서 인간 자연살해세포 아형의 특이적 역할",
+                tags: ["NK세포", "거부반응", "CD56bright", "CD56dim"],
+                category: ["nk", "rejection"],
+                summary: "신장 이식 거부반응에서 CD56bright와 CD56dim NK세포 아형이 거부반응 유형별로 서로 다르게 기여함을 규명",
+                methodology: "신장이식 환자 생검 조직에서 림프구 추출, 다색 유동세포분석법으로 NK세포 아형 식별 및 계수, 병리 조직학적 진단명과 대조",
+                results: [
+                    "T세포 매개 거부반응(TCMR): CD56bright NK세포만 유의하게 증가",
+                    "항체 매개 거부반응(AMR): CD56bright와 CD56dim 모두 유의하게 증가",
+                    "AMR에서 CD56dim NK세포의 CD69 활성화 마커 발현 유의하게 높음",
+                    "AMR 조직 상층액에서 perforin, granzyme A, granulysin 세포독성 물질 유의하게 높음"
+                ],
+                significance: "NK세포 아형이 거부반응 유형에 따라 서로 다르게 모집되고 활성화됨을 증명하여, 향후 정밀 진단과 아형별 맞춤형 치료 전략 수립에 기초 자료 제공"
+            },
+            {
+                id: 13,
+                title: "고위험 면역군 및 DCD 신장이식 수혜자의 Thymoglobulin 투여 후 T세포 재구성 비교",
+                tags: ["rATG", "T세포재구성", "DCD", "면역억제"],
+                category: ["tcell", "biomarker"],
+                summary: "고위험 면역군과 DCD 신장이식 수혜자 간의 rATG 투여 후 T세포 아형 재구성 패턴 및 면역 반응성 비교 분석",
+                methodology: "고위험 면역군(HR) 19명 vs DCD 수혜자 19명, 다색 유세포 분석법으로 rATG 투여 후 28일까지 T세포 아형 변화 추적",
+                results: [
+                    "공통점: 두 그룹 모두 T세포 급격 감소 후 28일 이상 지속, 유의미한 증식 관찰",
+                    "HR군: CD4+ Naïve T세포, 작동 기억 T세포, 조절 Treg 수치 빠르게 급증",
+                    "DCD군: T세포 항상성 증식 반응 현저히 둔화, CD4+ T세포 면역 반응성 낮음",
+                    "DCD 수혜자의 면역 반응이 HR 환자만큼 강력하지 않음"
+                ],
+                significance: "DCD 신장이식 수혜자에게 rATG 치료를 반드시 1차 선택 유도 요법으로 고려할 필요는 없음을 제안하며, 환자 군별 특성에 맞춘 정밀 면역억제 전략 필요성 제기"
+            },
+            {
+                id: 14,
+                title: "초회 이식 및 재이식 신장 수혜자의 T세포 아분류 프로파일과 DSA 발현 분석",
+                tags: ["재이식", "DSA", "T세포", "면역감작"],
+                category: ["tcell", "biomarker"],
+                summary: "초회 이식과 재이식 환자 간의 T세포 아분류 변화와 공여자 특이 항체(DSA) 발현 양상 비교를 통한 면역학적 차이 규명",
+                methodology: "2015~2017년 신장이식 환자 50명(초회 38명, 재이식 12명), 다색 유세포 분석 및 Luminex SAB로 1년간 추적",
+                results: [
+                    "CD4+ Naïve 세포: 초회군 증가 유지, 재이식군 급격 감소 후 낮은 수준 유지",
+                    "CD8+ 작동 기억 세포: 모든 시점에서 초회군이 재이식군보다 높음",
+                    "CD19+ Naïve 세포: 초회군 170%까지 증가 후 70%로 감소, 재이식군 지속 감소하여 38%",
+                    "DSA 발생: 초회군 23.7% vs 재이식군 58.3% (p=.001), 재이식군에서 더 조기 발현, 다양한 항원에 대해 동시 발견"
+                ],
+                significance: "임상 경과가 유사하더라도 초회 이식과 재이식 환자 간의 면역학적 동태(T세포 아분류 및 DSA 발현 양상)에는 뚜렷한 차이가 존재하며, T세포 아분류와 DSA 병행 측정이 무증상 면역 변화 진단에 민감하고 유용한 보조 도구"
+            },
+            {
+                id: 15,
+                title: "신장 동종이식 거부반응 수혜자의 말초혈액 단핵구에서 자연살해세포의 활성 표현형",
+                tags: ["NK세포", "거부반응", "CD107a", "IFN-γ"],
+                category: ["nk", "rejection", "biomarker"],
+                summary: "신장 이식 거부반응 환자의 NK세포가 활성화된 표현형을 보이며, 급성과 만성 거부반응에서 서로 다른 활성 양상 확인",
+                methodology: "거부반응군 19명(급성 8명, 만성 11명), 대조군 44명(안정 환자 22명, 건강 대조군 22명), Flow cytometry로 NK세포 빈도 및 활성화 지표 측정",
+                results: [
+                    "급성 거부반응: 안정군 대비 CD107a 발현 유의미 증가 (p=.021), 세포독성 활발",
+                    "만성 거부반응: 안정군 대비 IFN-γ 생성 유의미 증가 (p=.003), 면역조절 및 염증 반응 강화",
+                    "NK세포 빈도: 거부반응군에서 다소 감소 경향, 통계적 유의성 없음",
+                    "급성(세포독성 중심)과 만성(사이토카인 생성 중심) 거부반응에서 NK세포 활성 양상 다름"
+                ],
+                significance: "NK세포의 세포독성 및 활성 지표(CD107a, IFN-γ) 증가는 이식 거부반응과 밀접한 관련이 있으며, 향후 거부반응 발생 예측 또는 진단하는 잠재적 생체 지표로 활용 가능"
+            },
+            {
+                id: 16,
+                title: "혈액투석으로 인한 면역학적 변화가 신장이식 후 초기 합병증에 미치는 영향",
+                tags: ["혈액투석", "면역변화", "보체활성화", "T세포"],
+                category: ["tcell", "biomarker"],
+                summary: "말기 신부전 환자가 받는 혈액투석 자체가 환자의 면역 체계에 변화를 일으키며, 이것이 이식된 신장의 초기 거부 반응에 영향을 미칠 수 있는지 분석",
+                methodology: "신장이식 대기 중인 15명의 CKD5D 환자, 투석 전-중-후 혈액 채취, 유세포 분석(T세포 분획), ELISA/CBA(면역 표지자), 보체 시스템 활성도 측정",
+                results: [
+                    "투석 전: 이미 면역 활성화 상태, CD8+ 이펙터 T세포/HLA-DR+ Treg/sCD30 증가, Naive CD8+ T세포 감소",
+                    "투석 진행 중: Treg, CD25+ 활성 T세포, sCD30 유의미 상승, CD4- CD8- 이중 음성 T세포 급격 감소",
+                    "TGF-β 및 sCD30 농도 지속 상승, 면역 조절 환경 실시간 변화",
+                    "보체 활성화: 고전 경로 증가 유지, 대체 경로 투석 종료 직후 급격 상승(이봉성 반응)"
+                ],
+                significance: "혈액투석은 단순 노폐물 제거를 넘어 T세포 아형 분포와 보체 체계를 활성화하는 면역학적 변화를 유도하며, 이식 직후 환자의 면역 상태를 불안정하게 만들어 초기 거부 반응이나 합병증 발생에 기여할 가능성"
+            },
+            {
+                id: 17,
+                title: "설치류 신장이식 모델에서 APRIL/BLyS 차단을 통한 탈감작 및 치료",
+                tags: ["TACI-Ig", "ABMR", "B세포", "탈감작"],
+                category: ["biomarker", "rejection"],
+                summary: "항체 매개 거부반응(ABMR) 해결을 위해 B세포와 형질세포의 생존 인자 APRIL/BLyS를 동시 차단하는 TACI-Ig의 효과를 설치류 모델에서 분석",
+                methodology: "Lewis 쥐(수혜자)에게 Brown Norway 쥐(공여자) 혈액 21일간 투여로 동종항체 감작 유도 후 신장이식, 4개 그룹(대조군, 이식 전 투여, 이식 후 투여, 전후 병용) TACI-Ig 효과 비교",
+                results: [
+                    "B세포 및 항체 생성 세포 억제: 성숙 B세포(변연부 비전환) 유의미 감소(p<0.01), ASC 현저히 감소",
+                    "이식 후 투여(G6) 우월성: C4d 침착 및 Banff ABMR 소견 유의미하게 적음(p<0.0001)",
+                    "예상 밖 결과(G5, G7): 이식 전부터 투여 시 오히려 거부반응 심화, 조절 림프구까지 함께 제거 추정",
+                    "투여 시점(Timing)이 매우 중요, 본 모델에서는 이식 후 투여가 ABMR 억제에 가장 효과적"
+                ],
+                significance: "APRIL/BLyS 차단이 강력한 항체 억제 효과를 가짐을 입증하나, 무조건적 B세포 억제가 반드시 좋은 결과로 이어지지 않으며, 조절 B세포(Bregs) 손실 가능성 등 면역 체계 균형(Homeostasis) 고려한 정교한 투여 전략 필요"
+            },
+            {
+                id: 18,
+                title: "BK 바이러스 감염 신장이식 수혜자에서 VP1 및 VP3에 대한 CD4+ T세포 면역 반응",
+                tags: ["BKV", "CD4+ T세포", "VP1", "VP3"],
+                category: ["tcell", "biomarker"],
+                summary: "신장이식 후 초기 BK 바이러스(BKV) 감염 환자를 대상으로 BKV 단백질(VP1, VP2, VP3, LT-Ag, st-Ag)에 대한 특이적 세포성 면역 반응 특성 분석",
+                methodology: "신장이식 수혜자 30명을 BKV 질환 중증도별 3그룹(BKVN, Viremia, Viruria) 분류, 3개월마다 qPCR로 BKV 부하량 측정, PBMC 추출하여 BKV 펩타이드 풀로 자극 후 유세포 분석",
+                results: [
+                    "BKV 감염은 혈청 크레아티닌 상승시켜 신장 기능에 악영향",
+                    "BKV 항원 자극 세포성 면역 반응의 90% 이상이 CD4+ T세포에 의해 이루어짐",
+                    "Viremia 및 BKVN 상태: VP1, VP2, VP3 반응 다기능성 CD4+ T세포(IL-2/IFN-γ+/TNF-α+) 반응 유의미 감소 (p<0.05)",
+                    "VP1과 VP3의 면역원성이 VP2보다 유의하게 높음 (p<0.05), 조절 단백질(LT-Ag, st-Ag) 반응은 유의한 변화 없음"
+                ],
+                significance: "BKV 감염 시 VP1과 VP3 단백질이 BKV 특이적 세포 면역 반응의 주요 표적이며, Viremia 단계에서 이러한 구조 단백질에 대한 면역 반응 감소는 면역 체계의 감시 능력 저하 시 바이러스 증식 가속화되어 질환 악화 가능성 시사"
+            },
+            {
+                id: 19,
+                title: "인간 Vδ2+ T세포 구획의 선천적 Vγ9+ 및 적응적 Vγ9- 아집단 규명",
+                tags: ["γδ T세포", "Vδ2", "Vγ9", "면역아형"],
+                category: ["tcell", "biomarker"],
+                summary: "인간 말초혈액 내 γδ T세포의 다수를 차지하는 Vδ2+ T세포가 단일 집단이 아니라 기능적으로 완전히 다른 선천성과 적응성 집단으로 나뉨을 규명",
+                methodology: "인간 제대혈, 성인 말초혈액, 간 조직에서 Vδ2+ T세포 분리, Flow cytometry로 표면 마커 확인, TCR 레퍼토리 분석, 바이러스 감염 상황 면역 반응 추적",
+                results: [
+                    "선천성 Vγ9+ Vδ2+ T세포: 반불변성 TCR, 공공 TCR 서열 보유, 특정 항원에 즉각 반응",
+                    "적응성 Vγ9- Vδ2+ T세포(핵심 발견): 평상시 Naive-like 상태(CD27+, CCR7+, CD28+), TCR 레퍼토리 매우 다양",
+                    "바이러스 감염 시 Vγ9- 특정 클론 폭발적 증식, 효능 T세포(Granzyme A/B) 분화",
+                    "조직 거주성: 간과 같은 고형 조직 내에서 면역 감시 역할, 강한 클론 증식 흔적과 효능 세포 특성 유지"
+                ],
+                significance: "Vδ2+ T세포 내에 'Vγ9' 발현 여부에 따라 기능이 극명하게 갈림을 입증: Vγ9+ 집단은 항원 노출 전부터 형성된 선천성 면역, Vγ9- 집단은 특정 병원체에 반응해 선택적으로 증식하고 기억을 형성하는 적응성 면역 담당"
+            },
+            {
+                id: 20,
+                title: "신장이식 수혜자의 말초 혈액 내 이식 후 시간에 따른 NK세포 아형 변화",
+                tags: ["NK세포", "면역조절", "CD56dim", "CD56bright"],
+                category: ["nk", "biomarker"],
+                summary: "신장이식 수혜자의 말초 혈액 내 자연살해세포(NK cell) 아형이 이식 후 시간에 따라 어떻게 변화하는지 분석하여 이식 장기 예후에 기여할 수 있는 면역 조절 특성 규명",
+                methodology: "31명의 신장이식 수혜자, 8색 형광 유세포 분석법으로 전혈 내 림프구 및 NK세포 아형 분석, 이식 전 vs 6개월(9명), 장기 추적(28명, 중앙값 888일)",
+                results: [
+                    "이식 6개월 후: 세포독성 CD56dimCD16+ NK세포 수치와 관련 표현형(CD158a, CD158e, NKG2A, NKG2D, Perforin, Granzyme B) 유의미 감소",
+                    "장기 추적 시: CD56dim 계열 면역조절(IL4R, IL10R, IFNΓ) 발현 아형 증가",
+                    "CD56bright 계열: 면역억제 및 내성 관련(TGFβ, TGFR) 발현 아형 유의미 증가",
+                    "비세포독성 표현형(perforin-granzymeB-) 아형도 시간 따라 증가"
+                ],
+                significance: "신장이식 후 말초 혈액 내에서 세포독성을 띤 NK세포는 감소하여 낮은 수준 유지하는 반면, 면역조절(Immunoregulatory) 특성을 가진 NK세포 아형은 시간이 지남에 따라 점진적으로 증가하여 이식 장기의 안정적 생존에 긍정적 역할 가능성"
+            }
+        ];
+
+        let filteredPapers = [...papers];
+
+        function renderPapers(papersToRender) {
+            const grid = document.getElementById('papersGrid');
+            const noResults = document.getElementById('noResults');
+            
+            if (papersToRender.length === 0) {
+                grid.style.display = 'none';
+                noResults.style.display = 'block';
+                return;
+            }
+            
+            grid.style.display = 'grid';
+            noResults.style.display = 'none';
+            
+            grid.innerHTML = papersToRender.map(paper => `
+                <div class="paper-card" onclick="showModal(${paper.id})">
+                    <span class="paper-number">논문 #${paper.id}</span>
+                    <h3 class="paper-title">${paper.title}</h3>
+                    <div class="paper-tags">
+                        ${paper.tags.map((tag, idx) => 
+                            `<span class="tag ${idx === 0 ? 'highlight' : ''}">${tag}</span>`
+                        ).join('')}
+                    </div>
+                    <p class="paper-summary">${paper.summary}</p>
+                </div>
+            `).join('');
+        }
+
+        function showModal(paperId) {
+            const paper = papers.find(p => p.id === paperId);
+            const modal = document.getElementById('paperModal');
+            const modalBody = document.getElementById('modalBody');
+            
+            modalBody.innerHTML = `
+                <h2 class="modal-title">${paper.title}</h2>
+                
+                <div class="paper-tags">
+                    ${paper.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                </div>
+                
+                <div class="modal-section">
+                    <h3>🔬 연구 개요</h3>
+                    <p>${paper.summary}</p>
+                </div>
+                
+                <div class="modal-section">
+                    <h3>📊 주요 방법론</h3>
+                    <p>${paper.methodology}</p>
+                </div>
+                
+                <div class="modal-section">
+                    <h3>📈 핵심 결과</h3>
+                    <ul>
+                        ${paper.results.map(result => `<li>${result}</li>`).join('')}
+                    </ul>
+                </div>
+                
+                <div class="modal-section">
+                    <h3>💡 의의 및 시사점</h3>
+                    <p>${paper.significance}</p>
+                </div>
+            `;
+            
+            modal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            document.getElementById('paperModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        // 검색 기능
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            filteredPapers = papers.filter(paper => 
+                paper.title.toLowerCase().includes(searchTerm) ||
+                paper.summary.toLowerCase().includes(searchTerm) ||
+                paper.tags.some(tag => tag.toLowerCase().includes(searchTerm))
+            );
+            renderPapers(filteredPapers);
+        });
+
+        // 필터 기능
+        document.querySelectorAll('.filter-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                
+                const filter = this.dataset.filter;
+                const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+                
+                if (filter === 'all') {
+                    filteredPapers = papers;
+                } else {
+                    filteredPapers = papers.filter(paper => paper.category.includes(filter));
+                }
+                
+                if (searchTerm) {
+                    filteredPapers = filteredPapers.filter(paper => 
+                        paper.title.toLowerCase().includes(searchTerm) ||
+                        paper.summary.toLowerCase().includes(searchTerm) ||
+                        paper.tags.some(tag => tag.toLowerCase().includes(searchTerm))
+                    );
+                }
+                
+                renderPapers(filteredPapers);
+            });
+        });
+
+        // 모달 외부 클릭 시 닫기
+        window.onclick = function(event) {
+            const modal = document.getElementById('paperModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+
+        // ESC 키로 모달 닫기
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+
+        // 초기 렌더링
+        renderPapers(papers);
+    </script>
+</body>
+</html>
