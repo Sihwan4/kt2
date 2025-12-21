@@ -2,44 +2,19 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>연구 문서 저장소</title>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.2.0/github-markdown.min.css">
     <style>
-        body { display: flex; justify-content: center; background-color: #f6f8fa; margin: 0; }
+        body { display: flex; justify-content: center; background-color: #f6f8fa; margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
         .container { display: flex; width: 100%; max-width: 1200px; margin: 20px; gap: 20px; }
-        
-        /* 목차(TOC) 스타일 */
-        #toc {
-            width: 250px;
-            position: sticky;
-            top: 20px;
-            height: fit-content;
-            padding: 15px;
-            background: white;
-            border: 1px solid #d0d7de;
-            border-radius: 6px;
-            font-size: 14px;
-        }
-        #toc ul { list-style: none; padding-left: 0; }
-        #toc li { margin-bottom: 8px; }
+        #toc { width: 250px; position: sticky; top: 20px; height: fit-content; padding: 15px; background: white; border: 1px solid #d0d7de; border-radius: 6px; }
+        #toc ul { list-style: none; padding-left: 0; margin-top: 10px; }
+        #toc li { margin-bottom: 8px; font-size: 14px; }
         #toc a { text-decoration: none; color: #0969da; }
-        #toc a:hover { text-decoration: underline; }
-        #toc .depth-2 { padding-left: 15px; } /* ## 제목은 들여쓰기 */
-
-        /* 본문 스타일 */
-        #content {
-            flex: 1;
-            background: white;
-            padding: 45px;
-            border: 1px solid #d0d7de;
-            border-radius: 6px;
-        }
-        @media (max-width: 768px) {
-            .container { flex-direction: column; }
-            #toc { position: relative; width: auto; }
-        }
+        #toc .depth-1 { font-weight: bold; }
+        #toc .depth-2 { padding-left: 15px; color: #57606a; }
+        #content { flex: 1; background: white; padding: 45px; border: 1px solid #d0d7de; border-radius: 6px; min-width: 0; }
     </style>
 </head>
 <body>
@@ -49,36 +24,47 @@
         <strong>목차</strong>
         <ul id="toc-list"></ul>
     </nav>
-
     <article id="content" class="markdown-body"></article>
 </div>
 
 <script>
-    // 1. 마크다운 파일 읽어오기 (파일명은 본인의 파일로 수정하세요)
+    const contentEl = document.getElementById('content');
+    const tocListEl = document.getElementById('toc-list');
+
+    // 1. 최신 버전에 맞는 Renderer 설정
+    const renderer = new marked.Renderer();
+
+    // { text, depth } 객체 형태로 인자를 받도록 수정
+    renderer.heading = ({ text, depth }) => {
+        // 제목 텍스트에서 특수문자 제거하여 ID 생성
+        const id = text.toLowerCase().replace(/[^\w가-힣]+/g, '-');
+
+        // 목차 항목 생성
+        const li = document.createElement('li');
+        li.className = `depth-${depth}`;
+        li.innerHTML = `<a href="#${id}">${text}</a>`;
+        tocListEl.appendChild(li);
+
+        return `<h${depth} id="${id}">${text}</h${depth}>`;
+    };
+
+    // marked 설정에 renderer 등록
+    marked.setOptions({ renderer: renderer });
+
+    // 2. Fetch 수정: 응답을 텍스트로 변환 후 처리
     fetch('archive-summaries.md')
-        .then(response => response.text())
-        .then(text => {
-            const contentEl = document.getElementById('content');
-            const tocListEl = document.getElementById('toc-list');
-
-            // 2. 제목에 자동으로 ID를 부여하는 설정
-            const renderer = new marked.Renderer();
-            renderer.heading = (text, level) => {
-                const escapedText = text.toLowerCase().replace(/[^\w가-힣]+/g, '-');
-                
-                // 목차 리스트 아이템 생성
-                const li = document.createElement('li');
-                li.classList.add(`depth-${level}`);
-                li.innerHTML = `<a href="#${escapedText}">${text}</a>`;
-                tocListEl.appendChild(li);
-
-                return `<h${level} id="${escapedText}">${text}</h${level}>`;
-            };
-
-            // 3. 렌더링 실행
-            contentEl.innerHTML = marked.parse(text, { renderer: renderer });
+        .then(response => {
+            if (!response.ok) throw new Error('파일을 불러올 수 없습니다.');
+            return response.text(); // 여기서 Promise를 반환함
         })
-        .catch(err => console.error('문서를 불러오는 중 오류 발생:', err));
+        .then(markdownText => {
+            // 변환된 텍스트를 파싱하여 화면에 출력
+            contentEl.innerHTML = marked.parse(markdownText);
+        })
+        .catch(err => {
+            console.error('에러 발생:', err);
+            contentEl.innerHTML = `<p style="color:red;">문서를 불러오는 중 오류가 발생했습니다: ${err.message}</p>`;
+        });
 </script>
 
 </body>
