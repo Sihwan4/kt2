@@ -105,7 +105,7 @@
 			// 1. 먼저 마크다운을 HTML로 변환합니다.
 		    let htmlContent = marked.parse(markdownText);
 			
-			const preProcessedText = markdownText.replace(/\*\*([^*]+)\*\*([가-힣])/g, '**$1**&#8203;$2');
+			const preProcessedText = markdownText.replace(/\*\*/g, '&#8203;**&#8203;');
 
 		    // 2. 전처리된 텍스트를 파싱
 		    contentEl.innerHTML = marked.parse(preProcessedText);
