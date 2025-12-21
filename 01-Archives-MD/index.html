@@ -2,23 +2,84 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>연구 요약 보고서</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>연구 문서 저장소</title>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.2.0/github-markdown.min.css">
     <style>
-        .markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 45px; }
+        body { display: flex; justify-content: center; background-color: #f6f8fa; margin: 0; }
+        .container { display: flex; width: 100%; max-width: 1200px; margin: 20px; gap: 20px; }
+        
+        /* 목차(TOC) 스타일 */
+        #toc {
+            width: 250px;
+            position: sticky;
+            top: 20px;
+            height: fit-content;
+            padding: 15px;
+            background: white;
+            border: 1px solid #d0d7de;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        #toc ul { list-style: none; padding-left: 0; }
+        #toc li { margin-bottom: 8px; }
+        #toc a { text-decoration: none; color: #0969da; }
+        #toc a:hover { text-decoration: underline; }
+        #toc .depth-2 { padding-left: 15px; } /* ## 제목은 들여쓰기 */
+
+        /* 본문 스타일 */
+        #content {
+            flex: 1;
+            background: white;
+            padding: 45px;
+            border: 1px solid #d0d7de;
+            border-radius: 6px;
+        }
+        @media (max-width: 768px) {
+            .container { flex-direction: column; }
+            #toc { position: relative; width: auto; }
+        }
     </style>
 </head>
-<body class="markdown-body">
-    <div id="content"></div>
+<body>
 
-    <script>
-        // 표시하고 싶은 마크다운 파일 경로
-        fetch('archive-summaries.md')
-            .then(response => response.text())
-            .then(text => {
-                document.getElementById('content').innerHTML = marked.parse(text);
-            });
-    </script>
+<div class="container">
+    <nav id="toc">
+        <strong>목차</strong>
+        <ul id="toc-list"></ul>
+    </nav>
+
+    <article id="content" class="markdown-body"></article>
+</div>
+
+<script>
+    // 1. 마크다운 파일 읽어오기 (파일명은 본인의 파일로 수정하세요)
+    fetch('your-paper-summary.md')
+        .then(response => response.text())
+        .then(text => {
+            const contentEl = document.getElementById('content');
+            const tocListEl = document.getElementById('toc-list');
+
+            // 2. 제목에 자동으로 ID를 부여하는 설정
+            const renderer = new marked.Renderer();
+            renderer.heading = (text, level) => {
+                const escapedText = text.toLowerCase().replace(/[^\w가-힣]+/g, '-');
+                
+                // 목차 리스트 아이템 생성
+                const li = document.createElement('li');
+                li.classList.add(`depth-${level}`);
+                li.innerHTML = `<a href="#${escapedText}">${text}</a>`;
+                tocListEl.appendChild(li);
+
+                return `<h${level} id="${escapedText}">${text}</h${level}>`;
+            };
+
+            // 3. 렌더링 실행
+            contentEl.innerHTML = marked.parse(text, { renderer: renderer });
+        })
+        .catch(err => console.error('문서를 불러오는 중 오류 발생:', err));
+</script>
+
 </body>
 </html>
