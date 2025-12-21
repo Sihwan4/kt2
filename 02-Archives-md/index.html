@@ -105,8 +105,17 @@
 			// 1. 먼저 마크다운을 HTML로 변환합니다.
 		    let htmlContent = marked.parse(markdownText);
 			
-			const preProcessedText = markdownText.replace(/\*\*/g, '&#8203;**&#8203;');
-
+			// const preProcessedText = markdownText.replace(/\*\*/g, '&#8203;**&#8203;');
+			const preProcessedText = markdownText.split(/(\$.*?\$|\$\$.*?\$\$)/gs).map(part => {
+			    // part가 $로 시작하면 수식 영역이므로 그대로 반환
+			    if (part.startsWith('$')) {
+			        return part;
+			    }
+			    // 수식이 아닌 일반 텍스트 영역에서만 **를 치환
+			    return part.replace(/\*\*/g, '&#8203;**&#8203;');
+			}).join('');
+			
+			contentEl.innerHTML = marked.parse(preProcessedText);
 		    // 2. 전처리된 텍스트를 파싱
 		    contentEl.innerHTML = marked.parse(preProcessedText);
 			
