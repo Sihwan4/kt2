@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Renal Transcriptomics Research Dashboard</title>
+    
+    <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']], // $ 기호를 인라인 수식으로 인식
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            },
+            options: {
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        :root {
+            --primary: #2563eb;
+            --bg-gray: #f8fafc;
+            --border: #e2e8f0;
+            --text-main: #1e293b;
+            --text-sub: #64748b;
+        }
+
+        * { box-sizing: border-box; font-family: 'Pretendard', sans-serif; }
+
+        body {
+            margin: 0;
+            display: flex;
+            height: 100vh;
+            background-color: var(--bg-gray);
+            color: var(--text-main);
+        }
+
+        /* Sidebar Styling */
+        #sidebar {
+            width: 350px;
+            background: white;
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .sidebar-header { padding: 20px; border-bottom: 1px solid var(--border); }
+        .sidebar-header h2 { margin: 0; font-size: 1.25rem; color: var(--primary); display: flex; align-items: center; gap: 10px; }
+        #search-input { width: 100%; padding: 10px; margin-top: 15px; border: 1px solid var(--border); border-radius: 8px; outline: none; }
+
+        .paper-list { flex: 1; overflow-y: auto; padding: 10px; }
+        .paper-item { padding: 15px; margin-bottom: 8px; border-radius: 8px; cursor: pointer; transition: all 0.2s; border: 1px solid transparent; }
+        .paper-item:hover { background-color: #eff6ff; }
+        .paper-item.active { background-color: #dbeafe; border-color: var(--primary); }
+        .paper-item .num { font-size: 0.8rem; color: var(--primary); font-weight: bold; }
+        .paper-item .title { display: block; font-size: 0.9rem; font-weight: 600; margin-top: 5px; line-height: 1.4; }
+
+        /* Content Styling */
+        #content { flex: 1; overflow-y: auto; padding: 40px; background: #fdfdfd; }
+        .content-container { max-width: 900px; margin: 0 auto; }
+        .welcome-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: var(--text-sub); }
+
+        h1.main-title { font-size: 1.8rem; border-left: 5px solid var(--primary); padding-left: 15px; margin-bottom: 30px; line-height: 1.3; }
+        .section { margin-bottom: 30px; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .section h3 { display: flex; align-items: center; gap: 8px; color: var(--primary); margin-top: 0; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+        
+        p { line-height: 1.7; color: #334155; }
+        .tag { display: inline-block; padding: 4px 10px; background: #e2e8f0; border-radius: 15px; font-size: 0.75rem; font-weight: 600; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+
+<div id="sidebar">
+    <div class="sidebar-header">
+        <h2><i data-lucide="microscope"></i> 연구 아카이브</h2>
+        <input type="text" id="search-input" placeholder="논문 제목 검색...">
+    </div>
+    <div class="paper-list" id="paper-list"></div>
+</div>
+
+<div id="content">
+    <div id="view-area" class="welcome-screen">
+        <i data-lucide="book-open" size="48"></i>
+        <p>왼쪽 목록에서 논문을 선택하여 수식이 적용된 상세 내용을 확인하세요.</p>
+    </div>
+</div>
+
+<script>
+    const papers = [
+        { id: 1, title: "Renal transcriptome-wide analyses in association with kidney black carbon load", method: "29명의 신장 생검 조직 활용, 마이크로어레이(Microarray) 및 TWAS 분석 수행", results: "BC 입자 검출($5.4 \\times 10^3$ particles/$mm^3$), 섬모병증(Ciliopathies) 및 면역/염증 반응 연관 유전자 변화 확인", conclusion: "블랙 카본 노출이 신장 건강(일차 섬모 유지, DNA 손상 복구)에 미치는 위험성 입증" },
+        { id: 2, title: "Attenuated Molecular Response to SARS-CoV-2 in MDMs Isolated from Immunosuppressed Transplanted Patients", method: "면역억제제 복용 환자 4명의 MDM 세포 모델 사용, Bulk RNA-Seq 분석", results: "SARS-CoV-2 노출에도 불구하고 전사체 반응 부재, 선천 면역 경로 핵심 유전자 하향 조절", conclusion: "면역억제제가 초기 방어 기전인 선천 면역을 약화시켜 감염 취약성 증가" },
+        { id: 3, title: "Tertiary lymphoid organ-associated transcriptomic features predict rejection and outcome", method: "ssGSEA 기반 TLO 점수 산출, NMF 아형 분류 및 머신러닝 모델 구축", results: "TLO 활성이 높을수록 거부반응 증가 및 생존율 감소, CXCL9/11 등 4가지 핵심 유전자 식별", conclusion: "TLO 전사체 특징이 거부반응 진단 및 예후 예측의 강력한 바이오마커임을 규명" },
+        { id: 4, title: "Single-cell transcriptomics unravels early immune landscape and nominates Ccl3-Ccr5 target", method: "쥐(Rat) 모델 scRNA-seq 분석, 세포 궤적 추론 및 Maraviroc 치료 검증", results: "$Isg15^+$ 대식세포 아집단이 Ccl3-Ccr5 축을 통해 T 세포를 활성화하여 거부반응 주도", conclusion: "Ccl3-Ccr5 경로가 급성 거부반응의 핵심 동인이며 치료 표적으로서의 가능성 제시" },
+        { id: 5, title: "Transcriptomic profiling during normothermic machine perfusion of human kidneys", method: "상온 기계 관류(NMP) 중 조직 전사체 분석 및 세포 구성 역분석", results: "중증 IRI 군에서 $NF\\kappa B$, $TNF\\alpha$ 신호 및 선천 면역 활성화, 전염증성 단핵 식세포 증가", conclusion: "NMP 중 전사체 신호가 이식 후 예후(DGF)를 예측하는 지표로 활용 가능" },
+        { id: 6, title: "Identification and characterization of senescent macrophages in renal allograft rejection", method: "교차 종(인간/쥐) 멀티오믹스 및 scRNA-seq, 의사시간 분석", results: "거부반응 시 노화된 침윤 대식세포(SnIMs, $p21^+$) 발견, SASP 분비로 T세포와 상호작용", conclusion: "노화 대식세포가 이식 장기 손상의 핵심 기전이며 치료 표적(Senolytics)임을 규명" },
+        { id: 7, title: "Transcriptomic Insights into Polyomavirus Nephropathy: B-HOT Panel Evaluation", method: "PyVN 환자 FFPE 샘플 대상 B-HOT 패널 분석", results: "PyVN과 TCMR 구분에는 한계가 있으나, T세포 체크포인트 신호가 예후 마커로 작용", conclusion: "B-HOT 패널은 진단보다 바이러스 제거 가능성을 예측하는 예후 도구로 유용" },
+        { id: 8, title: "GlyT1 inhibition by ALX-5407 attenuates allograft rejection", method: "Th1 분화 시 GlyT1 발현 분석, ALX-5407 효과 확인", results: "GlyT1 억제 시 Th1 분화 억제, 라파마이신과 시너지로 생존 기간 연장", conclusion: "GlyT1이 Th1 분화의 대사 체크포인트이며 새로운 면역 억제 전략으로 제시" },
+        { id: 9, title: "Racial differences in kidney cancer histology and outcome: UroCCR Cohort", method: "프랑스 UroCCR 코호트 9,404명 분석 및 전사체 조사", results: "흑인 환자에서 ccRCC 비율이 낮고 희귀 유형 발생률 높음, 케모카인 경로 풍부", conclusion: "인종/조상 계통에 따른 신장 생물학적 차이가 존재하므로 맞춤형 전략 필요" },
+        { id: 10, title: "Single-cell RNA sequencing highlights role of PT cells in BKPyVN", method: "BKPyVN 환자 신장 및 소변 scRNA-seq 분석", results: "상피-면역 이중 특성을 가진 IGKC+ PT 세포 발견, T세포 소진 유도 확인", conclusion: "IGKC+ PT 세포가 질병 기전 설명 및 비침습적 진단 마커로 활용 가능" },
+{ id: 11, title: "Spatial transcriptomics reveals role of FCGR3A high monocytes/macrophages", method: "FFPE 생검 조직 공간 전사체 분석, 거부반응 군별 비교", results: "$FCGR3A^{high}$ 단핵구/대식세포 아형이 실제 조직 손상 부위와 공간적으로 일치", conclusion: "$FCGR3A$ 고발현 세포가 거부반응 주도 핵심 인자이며 선천 면역 타깃 치료 근거 제공" },
+        { id: 12, title: "Blunted glycolytic activation as a hallmark of maladaptive repair in renal IRI", method: "마우스 scRNA-seq 및 임상 재관류 생검 데이터 통합 분석", results: "당분해(Glycolysis) 활성이 둔화된 세포들이 부적응적 복구(섬유화) 경로로 진행", conclusion: "초기 당분해 활성화가 재생적 복구의 핵심이며 CKD 진행을 막는 치료 타깃" },
+        { id: 13, title: "Identification of M2 macrophage-related biomarkers for IFTA predictive model", method: "CIBERSORT, WGCNA 및 3가지 머신러닝 알고리즘 적용", results: "ALOX5, ARL4C, MS4A6A 3종 핵심 마커 발굴, AUC 0.78~0.88의 높은 예측력", conclusion: "M2 대식세포 관련 마커를 통한 IFTA 조기 예측 및 맞춤형 관리 가능" },
+        { id: 14, title: "Mitochondrial subtypes in renal IRI guide DGF and Long-Term graft prediction", method: "MGs 기반 군집 분석 및 머신러닝 예측 모델 구축, scRNA-seq 분석", results: "염증/면역형(C1)과 대사활성형(C2) 아형 식별, 비만세포의 핵심 역할 규명", conclusion: "미토콘드리아 유전체 특성이 DGF 발생 및 장기 생존율의 중요 예측 지표" },
+        { id: 15, title: "Prediction of transplant rejection based on RNA sequencing of PBMCs before transplantation", method: "이식 전 수혜자 PBMC RNA-seq 데이터에 WGCNA 및 머신러닝 적용", results: "간(항바이러스/IL-1), 신장(선천 면역/IL-8/T세포) 거부반응 상관 유전자 군집 발견", conclusion: "이식 전 혈액 데이터만으로 거부반응 위험을 사전 예측하는 모델 구축" },
+        { id: 16, title: "Characterization of BKPyVAN using transcriptomic analysis: a scoping review", method: "Medline/Embase 검색, 11편의 전사체 및 생물정보학 연구 고찰", results: "전염증성 경로 활성화 및 TCMR과의 유전적 유사성 확인, 소규모 표본 및 검증 부족 식별", conclusion: "BKPyVAN 전용 유전자 지표 발굴을 위한 대규모 정밀 연구 필요성 강조" },
+        { id: 17, title: "Multi-omic factor analyses uncovered cross-compartment complexity", method: "혈액/소변/조직 다중 구획 데이터 통합, MOFA(비지도 학습) 분석", results: "8개의 잠재적 요인 식별, 보체 활성화 및 단핵구 교차 반응 등 복합 기전 제시", conclusion: "다중 오믹스 통합을 통한 신장이식 거부반응의 정밀 진단 프레임워크 마련" },
+        { id: 18, title: "Multiple omics-based machine learning reveals peripheral blood immune cell landscape", method: "scRNA-seq + Bulk RNA-seq 통합, CNN 딥러닝 및 RSF 모델 구축", results: "4개 핵심 유전자(TBX21, CX3CR1, STAT1, NKG7) 발굴 및 비침습적 진단 모델 성능 입증", conclusion: "혈액 분석만으로 생검을 대체하는 비침습적 정밀 진단 및 예후 예측 가능" },
+        { id: 19, title: "Discovering molecular signatures in biopsies with borderline changes and isolated V-lesions", method: "PBMC scRNA-seq 및 신장 조직 공간 전사체 통합 분석", results: "CD8+ STAT1+ TEM 세포군이 핵심 역할 수행, STAT1을 허브 유전자로 식별", conclusion: "CD8+ STAT1+ TEM 세포군이 TCMR의 중요한 면역학적 지표임을 정밀 규명" },
+        { id: 20, title: "Identification of mitophagy-related genes with diagnostic value in acute rejection", method: "WGCNA, Random Forest, SVM-RFE 머신러닝 및 실험적 검증", results: "CCND1, ZC3H15, RPL38, ARPC4 4개 핵심 미토파지 유전자 발굴", conclusion: "미토파지 관련 유전자가 급성 거부반응을 조기 진단하는 새로운 바이오마커임을 입증" }
+    ];
+
+    const paperList = document.getElementById('paper-list');
+    const viewArea = document.getElementById('view-area');
+    const searchInput = document.getElementById('search-input');
+
+    function renderList(filter = '') {
+        paperList.innerHTML = '';
+        const filtered = papers.filter(p => p.title.toLowerCase().includes(filter.toLowerCase()));
+        
+        filtered.forEach(p => {
+            const div = document.createElement('div');
+            div.className = 'paper-item';
+            div.innerHTML = `<span class="num">Research #${p.id}</span><span class="title">${p.title}</span>`;
+            div.onclick = () => showDetail(p, div);
+            paperList.appendChild(div);
+        });
+    }
+
+    function showDetail(paper, element) {
+        document.querySelectorAll('.paper-item').forEach(el => el.classList.remove('active'));
+        element.classList.add('active');
+
+        viewArea.className = 'content-container';
+        viewArea.innerHTML = `
+            <div class="tag">Topic: Kidney Transplantation & Transcriptomics</div>
+            <h1 class="main-title">${paper.title}</h1>
+            <div class="section">
+                <h3><i data-lucide="layers"></i> 주요 방법론 (Methodology)</h3>
+                <p>${paper.method}</p>
+            </div>
+            <div class="section">
+                <h3><i data-lucide="bar-chart"></i> 주요 결과 (Key Results)</h3>
+                <p>${paper.results}</p>
+            </div>
+            <div class="section">
+                <h3><i data-lucide="check-circle"></i> 결론 및 시사점 (Conclusion)</h3>
+                <p>${paper.conclusion}</p>
+            </div>
+        `;
+        
+        // Lucide 아이콘 다시 렌더링
+        lucide.createIcons();
+        
+        // 2. 중요: MathJax에 새로운 컨텐츠가 추가되었음을 알리고 렌더링 수행
+        if (window.MathJax) {
+            MathJax.typesetPromise([viewArea]).catch((err) => console.log(err.message));
+        }
+    }
+
+    searchInput.oninput = (e) => renderList(e.target.value);
+    renderList();
+    lucide.createIcons();
+</script>
+
+</body>
+</html>
