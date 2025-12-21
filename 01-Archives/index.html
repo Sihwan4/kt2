@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>신장이식 면역학 연구 아카이브</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
+        body { font-family: 'Noto Sans KR', sans-serif; background-color: #f8fafc; }
+        .sidebar-scroll::-webkit-scrollbar { width: 4px; }
+        .sidebar-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .content-fade { animation: fadeIn 0.3s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="text-slate-800">
+
+<div id="app" class="flex h-screen overflow-hidden">
+    <!-- Sidebar -->
+    <aside class="w-80 bg-white border-r border-slate-200 flex flex-col hidden md:flex">
+        <div class="p-6 border-b border-slate-100">
+            <h1 class="text-xl font-bold text-blue-600 mb-1"><i class="fa-solid fa-microscope mr-2"></i>연구 아카이브</h1>
+            <p class="text-xs text-slate-500">신장이식 및 면역학 논문 요약</p>
+        </div>
+        
+        <div class="p-4">
+            <div class="relative">
+                <input type="text" id="searchInput" placeholder="연구 제목, 키워드 검색..." 
+                       class="w-full pl-10 pr-4 py-2 bg-slate-100 border-none rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+                <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-slate-400 text-sm"></i>
+            </div>
+        </div>
+
+        <nav id="sidebarList" class="flex-1 overflow-y-auto sidebar-scroll p-2 space-y-1">
+            <!-- List items will be injected here -->
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col overflow-hidden bg-slate-50">
+        <!-- Mobile Header -->
+        <header class="md:hidden bg-white p-4 border-b flex justify-between items-center">
+            <h1 class="font-bold text-blue-600">연구 아카이브</h1>
+            <button id="mobileMenuBtn" class="p-2 text-slate-600"><i class="fa-solid fa-bars"></i></button>
+        </header>
+
+        <!-- Top Bar (Desktop) -->
+        <header class="hidden md:flex bg-white h-16 border-b items-center justify-between px-8 shadow-sm">
+            <div id="breadcrumb" class="text-sm text-slate-500">
+                연구 목록 <i class="fa-solid fa-chevron-right mx-2 text-xs"></i> <span id="currentTitlePath" class="text-slate-800 font-medium">환영합니다</span>
+            </div>
+            <div class="flex items-center space-x-4">
+                <span class="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full font-bold">총 20개 논문</span>
+            </div>
+        </header>
+
+        <!-- Content Area -->
+        <div id="contentDisplay" class="flex-1 overflow-y-auto p-6 md:p-12">
+            <div id="welcomeScreen" class="h-full flex flex-col items-center justify-center text-center space-y-4">
+                <div class="w-20 h-20 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-3xl mb-4">
+                    <i class="fa-solid fa-book-medical"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-slate-800">신장이식 연구 데이터베이스</h2>
+                <p class="text-slate-500 max-w-md leading-relaxed">왼쪽 리스트에서 연구를 선택하여 상세 요약 내용을 확인하세요. 면역 반응, 거부 반응, 치료법 등 최신 연구 동향을 한눈에 볼 수 있습니다.</p>
+            </div>
+            <div id="articleContent" class="hidden content-fade max-w-4xl mx-auto">
+                <!-- Detailed content will be injected here -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Mobile Overlay Menu -->
+    <div id="mobileMenu" class="fixed inset-0 bg-white z-50 transform translate-x-full transition-transform duration-300 md:hidden">
+        <div class="p-4 border-b flex justify-between items-center bg-slate-50">
+            <h2 class="font-bold">연구 목록</h2>
+            <button id="closeMobileMenu" class="p-2"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div id="mobileSearchContainer" class="p-4 border-b">
+            <input type="text" id="mobileSearchInput" placeholder="검색어 입력..." class="w-full p-2 bg-slate-100 rounded-lg outline-none">
+        </div>
+        <div id="mobileSidebarList" class="overflow-y-auto h-[calc(100vh-140px)] p-2">
+            <!-- Mobile list items -->
+        </div>
+    </div>
+</div>
+
+<script>
+    const researchData = [
+        {
+            id: 1,
+            title: "Persistent lymphopenia after kidney transplantation",
+            fullTitle: "신장이식 후 지속되는 림프구 감소증: 사망률 증가 및 항상성 기전의 저하",
+            tags: ["림프구 감소증", "사망률", "CyTOF", "항상성"],
+            content: `
+                <h3 class="text-blue-600 font-bold text-sm uppercase mb-2 tracking-wider">연구 배경 및 목적</h3>
+                <p class="mb-6 leading-relaxed">신장이식 후 면역억제제 사용으로 인한 일시적인 림프구 감소증은 흔하지만, 수년간 지속되는 '지속성 림프구 감소증'의 유병률과 환자 사망률 및 면역학적 기전에 미치는 영향을 규명하고자 함.</p>
+                
+                <h3 class="text-blue-600 font-bold text-sm uppercase mb-2 tracking-wider">주요 결과</h3>
+                <ul class="list-disc pl-5 mb-6 space-y-2">
+                    <li><strong>유병률:</strong> 이식 3년 후에도 31%의 환자에게서 림프구 감소증 지속 확인.</li>
+                    <li><strong>사망률:</strong> 림프구 감소증의 정도가 심할수록 환자의 사망 위험 유의미하게 증가.</li>
+                    <li><strong>메커니즘:</strong> B/NK/T 세포 전반의 감소 및 흉선 배출 T세포 감소로 인한 항상성 유지 장애. 면역 소진 징후(PD-1 발현) 증가.</li>
+                </ul>
+
+                <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
+                    <h4 class="font-bold text-blue-800 mb-1 italic">전문가적 견해</h4>
+                    <p class="text-sm text-blue-900">단순히 세포가 적은 것이 아니라 '항상성을 유지하는 미성숙/줄기세포성 세포군의 결핍'이 핵심 기전임을 밝혀낸 우수한 연구입니다.</p>
+                </div>
+            `
+        },
+        {
+            id: 2,
+            title: "Interference of Vedolizumab With Cell Crossmatch",
+            fullTitle: "Anti-Integrin α4β7 Vedolizumab의 세포 교차시험 간섭 현상 규명",
+            tags: ["베돌리주맙", "교차시험", "위양성", "IBD"],
+            content: `
+                <h3 class="text-blue-600 font-bold text-sm uppercase mb-2 tracking-wider">연구 배경</h3>
+                <p class="mb-6 leading-relaxed">염증성 장질환(IBD) 치료제인 베돌리주맙(Vedolizumab)이 장기 이식 전 수행하는 유세포 분석 교차시험(FCXM) 결과에 위양성 간섭을 일으킬 수 있음을 확인.</p>
+                
+                <h3 class="text-blue-600 font-bold text-sm uppercase mb-2 tracking-wider">주요 결과</h3>
+                <ul class="list-disc pl-5 mb-6 space-y-2">
+                    <li><strong>T세포 FCXM 위양성:</strong> DSA가 없음에도 T세포 IgG FCXM에서 위양성 결과(1.6~4.4배) 도출.</li>
+                    <li><strong>기전:</strong> Integrin α4β7을 발현하는 특정 소수 T세포 군집에 약물이 결합하여 발생.</li>
+                    <li><strong>해결법:</strong> 프로나아제(Pronase) 처리가 VDZ에 의한 위양성 반응을 완전히 제거함 확인.</li>
+                </ul>
+
+                <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
+                    <h4 class="font-bold text-blue-800 mb-1 italic">핵심 제언</h4>
+                    <p class="text-sm text-blue-900">IBD 환자의 교차시험 결과가 예상치 않게 양성일 경우 베돌리주맙 복용 여부를 확인하고 프로나아제 처리를 고려해야 합니다.</p>
+                </div>
+            `
+        },
+        {
+            id: 3,
+            title: "Repair and Fibrosis Pathways After AKI",
+            fullTitle: "급성 신손상 후 회복과 섬유화 경로를 결정하는 상피-면역-기질 상호작용",
+            tags: ["급성 신손상(AKI)", "섬유화", "snRNA-seq", "PAX8"],
+            content: `
+                <h3 class="text-blue-600 font-bold text-sm uppercase mb-2 tracking-wider">연구 방법론</h3>
+                <p class="mb-6 leading-relaxed">snRNA-seq 및 Imaging Mass Cytometry(IMC)를 활용하여 이식 후 8주 이내 생검 조직의 세포 수준 기전 분석.</p>
+                
+                <h3 class="text-blue-600 font-bold text-sm uppercase mb-2 tracking-wider">주요 발견</h3>
+                <ul class="list-disc pl-5 mb-6 space-y-2">
+                    <li><strong>회복 그룹:</strong> 재생성 근위세뇨관(PT) 세포 및 MΦ2(복구형 대식세포) 우세.</li>
+                    <li><strong>비회복 그룹:</strong> 이행기 PT 세포(tPT4)의 탈분화 및 MΦ1(염증형 대식세포) 우세, PAX8 결핍 시 회복 방해.</li>
+                    <li><strong>결론:</strong> 상피-면역-기질 세포 간의 비정상적 교차 대화(Crosstalk)가 만성 섬유화의 원인.</li>
+                </ul>
+            `
+        },
+        {
+            id: 4,
+            title: "CyTOF Immune Phenotypes in Renal Transplant",
+            fullTitle: "CyTOF를 이용한 성인 신장 이식 수혜자의 말초혈액 면역 표현형 특성 분석",
+            tags: ["CyTOF", "면역 프로파일링", "CD8+ T세포", "NK세포"],
+            content: `
+                <h3 class="text-blue-600 font-bold text-sm uppercase mb-2 tracking-wider">연구 목적</h3>
+                <p class="mb-6 leading-relaxed">이식 후 6개월간 환자의 면역 상태 변화를 단일 세포 수준에서 정밀하게 분석하여 개별화된 치료 전략 수립 근거 마련.</p>
+                
+                <h3 class="text-blue-600 font-bold text-sm uppercase mb-2 tracking-wider">주요 분석 결과</h3>
+                <ul class="list-disc pl-5 mb-6 space-y-2">
+                    <li><strong>CD8+ T 세포 활성화:</strong> 건강 대조군 대비 CD57+ 표현형 및 IFN-γ 생성 증가.</li>
+                    <li><strong>조절 T세포(Treg):</strong> IL-10 생성 감소로 인한 체내 전염증성 환경 조성 확인.</li>
+                    <li><strong>시사점:</strong> 이식 환자의 면역 상태는 단순히 억제된 것이 아니라 특정 세포군은 오히려 활성화된 복합적 상태임.</li>
+                </ul>
+            `
+        },
+        {
+            id: 5,
+            title: "MSC Infusion and B/T Cell Phenotypes",
+            fullTitle: "신장이식 환자에서 동종 중간엽줄기세포(MSC) 주입의 면역학적 영향",
+            tags: ["MSC", "줄기세포", "CyTOF", "면역조절"],
+            content: `
+                <h3 class="text-blue-600 font-bold text-sm uppercase mb-2 tracking-wider">연구 배경</h3>
+                <p class="mb-6 leading-relaxed">이식 후 25-26주차에 투여한 동종 골수 유래 MSC가 면역 체계에 미치는 즉각적 및 장기적 변화 추적.</p>
+                
+                <h3 class="text-blue-600 font-bold text-sm uppercase mb-2 tracking-wider">핵심 결과</h3>
+                <ul class="list-disc pl-5 mb-6 space-y-2">
+                    <li><strong>즉각적 변화:</strong> 주입 4시간 이내에 특정 면역 조절 표현형(CD11b+, CD11c+, CD38+, CD39+, Ki-67+)을 가진 B세포 및 T세포 하위 집단 급증.</li>
+                    <li><strong>장기적 영향:</strong> 주요 면역 세포군에서는 미세한 변화만 관찰되어 투여 안전성 확인.</li>
+                </ul>
+            `
+        },
+        {
+            id: 6,
+            title: "NK-T subsets protecting from CMV infection",
+            fullTitle: "신장이식 환자의 거대세포바이러스(CMV) 감염 예방 관련 NK-T 세포 아형 발견",
+            tags: ["CMV", "NK-T 세포", "바이러스 예방", "딥러닝"],
+            content: `
+                <h3 class="text-blue-600 font-bold text-sm uppercase mb-2 tracking-wider">연구 방법</h3>
+                <p class="mb-6 leading-relaxed">112개의 시계열 혈액 샘플을 CyTOF 및 비지도 딥러닝 분석 기법으로 분석하여 CMV 보호 면역 지표 식별.</p>
+                
+                <h3 class="text-blue-600 font-bold text-sm uppercase mb-2 tracking-wider">주요 결과</h3>
+                <ul class="list-disc pl-5 mb-6 space-y-2">
+                    <li><strong>보호 지표:</strong> CD11b 마커를 공유하는 3가지 특정 NK-T 세포 아형이 감염 예방과 밀접한 관련이 있음.</li>
+                    <li><strong>위험 지표:</strong> 일반적인 CD3+CD8midCD56+ NK-T 세포 군집은 낮은 CMI 및 감염 발생과 상관관계.</li>
+                </ul>
+            `
+        },
+        {
+            id: 7,
+            title: "Tacrolimus vs Rapamycin Deep Phenotyping",
+            fullTitle: "Tacrolimus 및 Rapamycin 장기 복용에 따른 T세포 면역 표현형 차이",
+            tags: ["Tacrolimus", "Rapamycin", "T세포 노화", "정밀의료"],
+            content: `
+                <h3 class="text-blue-600 font-bold text-sm uppercase mb-2 tracking-wider">연구 비교</h3>
+                <p class="mb-6 leading-relaxed">이식 후 3년 이상 각 약물을 복용한 환자군의 T세포 아형 및 신호 전달 경로 반응성 분석.</p>
+                
+                <h3 class="text-blue-600 font-bold text-sm uppercase mb-2 tracking-wider">주요 결과</h3>
+                <ul class="list-disc pl-5 mb-6 space-y-2">
+                    <li><strong>Tacrolimus:</strong> 노화된 T세포 증가 및 TCR 신호 반응성 저하 (이식 장기 수용성 우세).</li>
+                    <li><strong>Rapamycin:</strong> 조절 T세포(Tregs) 강화 및 신호 전달 감도 유지 (항종양/항감염 잠재력 유지).</li>
+                    <li><strong>임상 검증:</strong> Rapamycin 복용군이 종양 및 감염 빈도가 실제로 더 낮음 확인.</li>
+                </ul>
+            `
+        },
+        {
+            id: 8,
+            title: "Lymphocyte Composition in Pregnant Recipients",
+            fullTitle: "신장이식 수혜 임신부의 모체, 탈락막 및 신생아 림프구 구성 변화",
+            tags: ["임신", "신생아 면역", "탈락막", "타크로리무스"],
+            content: `
+                <h3 class="text-blue-600 font-bold text-sm uppercase mb-2 tracking-wider">연구 내용</h3>
+                <p class="mb-6 leading-relaxed">면역억제제 노출이 모체 전신 면역, 자궁 내 국소 면역(탈락막), 신생아 제대혈 면역에 미치는 영향 분석.</p>
+                
+                <h3 class="text-blue-600 font-bold text-sm uppercase mb-2 tracking-wider">주요 발견</h3>
+                <ul class="list-disc pl-5 mb-6 space-y-2">
+                    <li><strong>탈락막 변화:</strong> 타크로리무스 단독 투여군에서 조절 T세포(Treg) 빈도 유의하게 감소.</li>
+                    <li><strong>신생아 영향:</strong> 제대혈 내 선천/적응 면역계 모두에서 상당한 변화 관찰 (자궁 내 약물 노출 영향).</li>
+                </ul>
+            `
+        },
+        {
+            id: 9,
+            title: "Pediatric Renal Transplantation Follow-up",
+            fullTitle: "유세포 분석 및 DNA 기반 HLA 검사를 통한 소아 신장이식 5년 추적 관찰",
+            tags: ["소아 이식", "HLA 검사", "FCXM", "장기 예후"],
+            content: `
+                <h3 class="text-blue-600 font-bold text-sm uppercase mb-2 tracking-wider">사례 보고</h3>
+                <p class="mb-6 leading-relaxed">고민감도 FCXM 및 DNA 기반 HLA 분석을 선별 검사로 활용한 소아 환자의 5년 장기 예후 보고.</p>
+                
+                <h3 class="text-blue-600 font-bold text-sm uppercase mb-2 tracking-wider">결과 및 의의</h3>
+                <ul class="list-disc pl-5 mb-6 space-y-2">
+                    <li><strong>결과:</strong> 5년 후 혈청 크레아티닌 수치 안정 및 합병증 없는 정상 생활 확인.</li>
+                    <li><strong>시사점:</strong> 정밀 검사법의 도입이 소아 환자의 만성 거부반응 리스크 관리 및 생존율 향상에 기여.</li>
+                </ul>
+            `
+        },
+        {
+            id: 10,
+            title: "PTCL after Muromonab-CD3 therapy",
+            fullTitle: "Muromonab-CD3(OKT3) 치료 병력이 있는 환자의 말초 T세포 림프종 진단적 딜레마",
+            tags: ["OKT3", "림프종(PTCL)", "면역표현형", "진단 오류"],
+            content: `
+                <h3 class="text-blue-600 font-bold text-sm uppercase mb-2 tracking-wider">진단 이슈</h3>
+                <p class="mb-6 leading-relaxed">과거 항-CD3 항체 치료가 암세포의 표면 항원 발현에 영향을 주어 진단을 어렵게 만든 사례 분석.</p>
+                
+                <h3 class="text-blue-600 font-bold text-sm uppercase mb-2 tracking-wider">주요 발견</h3>
+                <ul class="list-disc pl-5 mb-6 space-y-2">
+                    <li><strong>딜레마:</strong> 암세포에서 표면 CD3 발현 소실 관찰 (과거 약물에 의한 내재화 추정).</li>
+                    <li><strong>해결:</strong> 세포질 내 CD3 양성 확인 및 TCR 유전자 재배열 검사를 통해 PTCL 최종 진단.</li>
+                </ul>
+            `
+        },
+        {
+            id: 11,
+            title: "Reduced aTreg and Acute Rejection",
+            fullTitle: "신장이식 환자의 활성 조절 T세포(aTreg) 감소와 급성 거부반응의 연관성",
+            tags: ["aTreg", "급성 거부반응", "생체지표", "면역조절"],
+            content: `
+                <h3 class="text-blue-600 font-bold text-sm uppercase mb-2 tracking-wider">연구 핵심</h3>
+                <p class="mb-6 leading-relaxed">단순한 조절 T세포 양이 아닌 '활성화 상태(aTreg)'가 거부반응 예측에 더 중요함을 입증.</p>
+                
+                <h3 class="text-blue-600 font-bold text-sm uppercase mb-2 tracking-wider">결과</h3>
+                <ul class="list-disc pl-5 mb-6 space-y-2">
+                    <li><strong>AR 환자군:</strong> 전체 Treg 중 aTreg 비중이 유의하게 낮음.</li>
+                    <li><strong>안정군:</strong> 건강 대조군보다 오히려 aTreg/Treg 비율이 높음 (면역 안정 유지 기전).</li>
+                </ul>
+            `
+        },
+        {
+            id: 12,
+            title: "Roles of NK Cell Subsets in Rejection",
+            fullTitle: "신장 이식 거부반응에서 인간 자연살해(NK) 세포 아형의 특이적 역할",
+            tags: ["NK세포", "TCMR", "AMR", "세포독성"],
+            content: `
+                <h3 class="text-blue-600 font-bold text-sm uppercase mb-2 tracking-wider">거부반응별 차이</h3>
+                <p class="mb-6 leading-relaxed">TCMR(T세포 매개)과 AMR(항체 매개) 거부반응에서 서로 다른 NK 세포 아형의 기여도 규명.</p>
+                
+                <h3 class="text-blue-600 font-bold text-sm uppercase mb-2 tracking-wider">발견 내용</h3>
+                <ul class="list-disc pl-5 mb-6 space-y-2">
+                    <li><strong>TCMR:</strong> 주로 CD56bright 아형 수 증가와 연관.</li>
+                    <li><strong>AMR:</strong> CD56bright와 CD56dim 모두 증가, 특히 CD56dim의 강한 활성화와 세포 독성 물질(퍼포린 등) 방출 특징.</li>
+                </ul>
+            `
+        },
+        {
+            id: 13,
+            title: "T-Cell Reconstitution Following Thymoglobulin",
+            fullTitle: "고위험 면역군 및 DCD 신장 이식 환자의 rATG 투여 후 T세포 재구성 비교",
+            tags: ["rATG", "DCD", "T세포 회복", "면역 위험"],
+            content: `
+                <h3 class="text-blue-600 font-bold text-sm uppercase mb-2 tracking-wider">연구 제언</h3>
+                <p class="mb-6 leading-relaxed">DCD(순환정지 후 장기기증) 수혜자에게 강력한 rATG 유도 요법이 반드시 필요한지 검토.</p>
+                
+                <h3 class="text-blue-600 font-bold text-sm uppercase mb-2 tracking-wider">주요 결과</h3>
+                <ul class="list-disc pl-5 mb-6 space-y-2">
+                    <li><strong>DCD 군:</strong> 고위험 면역군(HR) 대비 T세포 항상성 증식 반응이 현저히 둔화되고 면역 반응성이 낮음.</li>
+                    <li><strong>결론:</strong> DCD 수혜자에게 rATG를 반드시 1차 선택 요법으로 고려할 필요는 없음.</li>
+                </ul>
+            `
+        },
+        {
+            id: 14,
+            title: "T Cell Subset Profile and DSA Appearance",
+            fullTitle: "초회 이식 및 재이식 환자의 T세포 아분류 프로파일과 DSA 발현 분석",
+            tags: ["재이식", "DSA", "T세포 동태", "나이브 세포"],
+            content: `
+                <h3 class="text-blue-600 font-bold text-sm uppercase mb-2 tracking-wider">그룹별 비교</h3>
+                <p class="mb-6 leading-relaxed">재이식 환자의 면역학적 특성을 초회 이식 환자와 비교 분석.</p>
+                
+                <h3 class="text-blue-600 font-bold text-sm uppercase mb-2 tracking-wider">주요 발견</h3>
+                <ul class="list-disc pl-5 mb-6 space-y-2">
+                    <li><strong>재이식 군:</strong> CD4+ 나이브 세포의 급격한 고갈 및 낮은 수준 유지.</li>
+                    <li><strong>DSA:</strong> 재이식군에서 발생 빈도가 월등히 높고(58.3%), 더 조기에 다클론성으로 나타남.</li>
+                </ul>
+            `
+        },
+        {
+            id: 15,
+            title: "NK Cell Activated Phenotype in Rejection",
+            fullTitle: "신장 이식 거부반응 환자 NK 세포의 활성화 표현형 분석",
+            tags: ["NK세포", "CD107a", "IFN-γ", "활성화"],
+            content: `
+                <h3 class="text-blue-600 font-bold text-sm uppercase mb-2 tracking-wider">연구 요약</h3>
+                <p class="mb-6 leading-relaxed">급성 및 만성 거부반응 기전에서 NK 세포의 활성 양상 차이 분석.</p>
+                
+                <h3 class="text-blue-600 font-bold text-sm uppercase mb-2 tracking-wider">주요 결과</h3>
+                <ul class="list-disc pl-5 mb-6 space-y-2">
+                    <li><strong>급성 거부:</strong> 세포독성 지표인 CD107a 발현 유의미하게 증가.</li>
+                    <li><strong>만성 거부:</strong> 사이토카인 생성 지표인 IFN-γ 생성 유의미하게 증가.</li>
+                    <li><strong>의미:</strong> NK 세포 활성화 표현형은 거부반응 예측 생체지표로 활용 가능성 높음.</li>
+                </ul>
+            `
+        },
+        {
+            id: 16,
+            title: "Hemodialysis and Early Complications",
+            fullTitle: "혈액투석이 신장이식 후 초기 면역 반응에 미치는 영향",
+            tags: ["혈액투석", "보체 체계", "면역 불안정", "초기 합병증"],
+            content: `
+                <h3 class="text-blue-600 font-bold text-sm uppercase mb-2 tracking-wider">연구 배경</h3>
+                <p class="mb-6 leading-relaxed">투석 과정 자체가 면역 체계를 활성화시켜 이식 직후 거부 반응에 기여할 가능성 분석.</p>
+                
+                <h3 class="text-blue-600 font-bold text-sm uppercase mb-2 tracking-wider">주요 결과</h3>
+                <ul class="list-disc pl-5 mb-6 space-y-2">
+                    <li><strong>T세포 변화:</strong> 투석 중 조절 T세포 및 sCD30 수치 유의미한 상승.</li>
+                    <li><strong>보체 활성화:</strong> 고전 및 대체 경로 모두 투석 전후로 활성화되어 면역 상태 불안정 초래.</li>
+                    <li><strong>코멘트:</strong> 이식 수술 전후 면역 억제 전략 수립 시 투석에 의한 변동성을 고려해야 함.</li>
+                </ul>
+            `
+        },
+        {
+            id: 17,
+            title: "APRIL/BLyS blockade in Kidney Transplant",
+            fullTitle: "APRIL/BLyS 동시 차단(TACI-Ig)을 통한 항체 매개 거부반응 억제 효과",
+            tags: ["ABMR", "B세포 차단", "TACI-Ig", "투여 시점"],
+            content: `
+                <h3 class="text-blue-600 font-bold text-sm uppercase mb-2 tracking-wider">실험 모델</h3>
+                <p class="mb-6 leading-relaxed">설치류 감작 모델을 통해 TACI-Ig 투여 시점에 따른 거부반응 억제 효과 분석.</p>
+                
+                <h3 class="text-blue-600 font-bold text-sm uppercase mb-2 tracking-wider">주요 결과</h3>
+                <ul class="list-disc pl-5 mb-6 space-y-2">
+                    <li><strong>최적 시점:</strong> 이식 후(Post-transplant) 투여 그룹이 거부반응 지표(C4d) 감소 효과가 가장 우월함.</li>
+                    <li><strong>주의점:</strong> 이식 전 과도한 차단은 조절 림프구까지 제거하여 오히려 거부반응을 악화시킬 수 있음.</li>
+                </ul>
+            `
+        },
+        {
+            id: 18,
+            title: "CD4+ T Cell Response to BKV VP1 and VP3",
+            fullTitle: "신장이식 환자 BK 바이러스 감염 시 VP1/VP3 특이적 면역 반응",
+            tags: ["BK 바이러스", "BKVN", "CD4+ T세포", "바이러스 모니터링"],
+            content: `
+                <h3 class="text-blue-600 font-bold text-sm uppercase mb-2 tracking-wider">연구 목적</h3>
+                <p class="mb-6 leading-relaxed">BKV 감염 시 주요 타겟 항원을 규명하여 예후 예측 지표로 활용하고자 함.</p>
+                
+                <h3 class="text-blue-600 font-bold text-sm uppercase mb-2 tracking-wider">주요 발견</h3>
+                <ul class="list-disc pl-5 mb-6 space-y-2">
+                    <li><strong>주요 표적:</strong> 구조 단백질인 VP1과 VP3가 특이적 세포 면역 반응의 90% 이상을 유도함.</li>
+                    <li><strong>상관관계:</strong> 바이러스혈증 상태에서 VP1/VP3에 대한 다기능성 CD4+ T세포 반응이 감소하며 질환 악화.</li>
+                </ul>
+            `
+        },
+        {
+            id: 19,
+            title: "Vδ2+ T-cell: Innate-like vs Adaptive subsets",
+            fullTitle: "인간 Vδ2+ T세포의 재정의: 선천성 Vγ9+와 적응성 Vγ9- 아집단",
+            tags: ["γδ T세포", "적응 면역", "조직 거주성", "면역치료"],
+            content: `
+                <h3 class="text-blue-600 font-bold text-sm uppercase mb-2 tracking-wider">새로운 분류</h3>
+                <p class="mb-6 leading-relaxed">기존에 단일 집단으로 여겨진 Vδ2+ T세포 내 기능적으로 다른 두 아집단 규명.</p>
+                
+                <h3 class="text-blue-600 font-bold text-sm uppercase mb-2 tracking-wider">특징</h3>
+                <ul class="list-disc pl-5 mb-6 space-y-2">
+                    <li><strong>Vγ9+ 집단:</strong> 즉각 반응하는 선천성 면역 담당.</li>
+                    <li><strong>Vγ9- 집단:</strong> 바이러스에 반응해 폭발적으로 증식하고 기억을 형성하는 적응 면역 담당 (간 조직 내 우세).</li>
+                </ul>
+            `
+        },
+        {
+            id: 20,
+            title: "Changes of NK cell subsets with time post-transplant",
+            fullTitle: "신장이식 후 시간에 따른 말초 혈액 NK 세포 아형의 표현형 변화",
+            tags: ["NK세포", "면역 조절", "장기 추적", "이식 내성"],
+            content: `
+                <h3 class="text-blue-600 font-bold text-sm uppercase mb-2 tracking-wider">시간적 변화</h3>
+                <p class="mb-6 leading-relaxed">이식 후 기간 경과에 따른 NK 세포의 성격 변화(세포독성 -> 면역조절) 분석.</p>
+                
+                <h3 class="text-blue-600 font-bold text-sm uppercase mb-2 tracking-wider">주요 결과</h3>
+                <ul class="list-disc pl-5 mb-6 space-y-2">
+                    <li><strong>초기(6개월):</strong> 강한 세포독성을 띤 NK 세포(CD56dim) 수치 유의하게 감소.</li>
+                    <li><strong>장기(3년 이상):</strong> 면역 억제 및 내성과 관련된 TGFβ 발현 아형 및 면역 조절 NK 세포 점진적 증가.</li>
+                    <li><strong>의미:</strong> 이러한 표현형 변화가 이식 장기의 안정적 생존에 긍정적 역할 수행.</li>
+                </ul>
+            `
+        }
+    ];
+
+    const sidebarList = document.getElementById('sidebarList');
+    const mobileSidebarList = document.getElementById('mobileSidebarList');
+    const articleContent = document.getElementById('articleContent');
+    const welcomeScreen = document.getElementById('welcomeScreen');
+    const searchInput = document.getElementById('searchInput');
+    const mobileSearchInput = document.getElementById('mobileSearchInput');
+    const currentTitlePath = document.getElementById('currentTitlePath');
+    const mobileMenu = document.getElementById('mobileMenu');
+
+    // Render list
+    function renderList(data, container) {
+        container.innerHTML = '';
+        data.forEach(item => {
+            const btn = document.createElement('button');
+            btn.className = 'w-full text-left p-3 rounded-lg hover:bg-slate-100 transition-colors group relative overflow-hidden active:bg-blue-50';
+            btn.onclick = () => selectArticle(item.id);
+            btn.innerHTML = `
+                <div class="text-xs text-blue-600 font-bold mb-1 opacity-70 group-hover:opacity-100">Study #${item.id}</div>
+                <div class="text-sm font-semibold text-slate-700 line-clamp-1 group-hover:text-blue-700">${item.title}</div>
+                <div class="flex flex-wrap gap-1 mt-2">
+                    ${item.tags.slice(0, 2).map(tag => `<span class="text-[10px] bg-white border border-slate-200 px-1.5 py-0.5 rounded text-slate-500">${tag}</span>`).join('')}
+                </div>
+            `;
+            container.appendChild(btn);
+        });
+    }
+
+    function selectArticle(id) {
+        const item = researchData.find(d => d.id === id);
+        welcomeScreen.classList.add('hidden');
+        articleContent.classList.remove('hidden');
+        currentTitlePath.innerText = item.title;
+        
+        articleContent.innerHTML = `
+            <div class="mb-8">
+                <div class="flex items-center space-x-2 text-blue-600 font-bold text-xs mb-3 uppercase tracking-widest">
+                    <span>Research Paper #${item.id}</span>
+                </div>
+                <h1 class="text-3xl font-extrabold text-slate-900 mb-4 leading-tight">${item.fullTitle}</h1>
+                <div class="flex flex-wrap gap-2 mb-8">
+                    ${item.tags.map(tag => `<span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs font-medium">${tag}</span>`).join('')}
+                </div>
+                <div class="h-px w-full bg-gradient-to-r from-blue-200 to-transparent mb-10"></div>
+            </div>
+            <div class="prose prose-slate max-w-none text-slate-700">
+                ${item.content}
+            </div>
+            <div class="mt-12 pt-8 border-t border-slate-200 text-slate-400 text-sm flex justify-between items-center">
+                <span>신장이식 면역학 연구 데이터베이스</span>
+                <button onclick="window.scrollTo({top:0, behavior:'smooth'})" class="text-blue-500 hover:underline">위로 올라가기 <i class="fa-solid fa-arrow-up ml-1"></i></button>
+            </div>
+        `;
+        
+        // Handle mobile menu close
+        mobileMenu.classList.add('translate-x-full');
+        document.getElementById('contentDisplay').scrollTo(0, 0);
+    }
+
+    // Search logic
+    function handleSearch(e) {
+        const val = e.target.value.toLowerCase();
+        const filtered = researchData.filter(d => 
+            d.title.toLowerCase().includes(val) || 
+            d.fullTitle.toLowerCase().includes(val) ||
+            d.tags.some(t => t.toLowerCase().includes(val))
+        );
+        renderList(filtered, sidebarList);
+        renderList(filtered, mobileSidebarList);
+    }
+
+    searchInput.oninput = handleSearch;
+    mobileSearchInput.oninput = handleSearch;
+
+    // Mobile menu toggle
+    document.getElementById('mobileMenuBtn').onclick = () => mobileMenu.classList.remove('translate-x-full');
+    document.getElementById('closeMobileMenu').onclick = () => mobileMenu.classList.add('translate-x-full');
+
+    // Init
+    renderList(researchData, sidebarList);
+    renderList(researchData, mobileSidebarList);
+
+</script>
+</body>
+</html>
