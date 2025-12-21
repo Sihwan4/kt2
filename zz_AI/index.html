@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical AI Research Insights</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Noto+Sans+KR:wght@300;400;700&display=swap');
+        body { font-family: 'Inter', 'Noto Sans KR', sans-serif; background-color: #f8fafc; }
+        .sidebar-item:hover { background-color: #f1f5f9; cursor: pointer; }
+        .sidebar-item.active { background-color: #e2e8f0; border-right: 4px solid #3b82f6; }
+        .content-card { animation: fadeIn 0.3s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .markdown-content ul { list-style-type: disc; padding-left: 1.5rem; margin-bottom: 1rem; }
+        .markdown-content li { margin-bottom: 0.5rem; }
+    </style>
+</head>
+<body class="h-screen flex flex-col">
+
+    <header class="bg-slate-900 text-white p-4 shadow-md flex justify-between items-center px-8">
+        <div class="flex items-center space-x-3">
+            <i class="fa-solid fa-microscope text-blue-400 text-2xl"></i>
+            <h1 class="text-xl font-bold tracking-tight">Health-AI Research Hub</h1>
+        </div>
+        <div class="text-sm font-light text-slate-400">
+            전문가 시각의 논문 핵심 요약 큐레이션
+        </div>
+    </header>
+
+    <div class="flex flex-1 overflow-hidden">
+        <aside class="w-1/3 lg:w-1/4 bg-white border-right border-slate-200 flex flex-col shadow-inner">
+            <div class="p-4 border-b">
+                <div class="relative">
+                    <i class="fa-solid fa-search absolute left-3 top-3 text-slate-400"></i>
+                    <input type="text" id="searchInput" placeholder="키워드 검색 (암, 머신러닝...)" 
+                           class="w-full pl-10 pr-4 py-2 bg-slate-100 border-none rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm">
+                </div>
+            </div>
+            <nav id="sidebarList" class="flex-1 overflow-y-auto overflow-x-hidden">
+                </nav>
+        </aside>
+
+        <main id="mainContent" class="flex-1 overflow-y-auto p-8 bg-slate-50">
+            <div id="emptyState" class="h-full flex flex-col items-center justify-center text-slate-400">
+                <i class="fa-solid fa-book-medical text-6xl mb-4"></i>
+                <p>좌측 목록에서 분석할 논문을 선택해 주세요.</p>
+            </div>
+            <div id="detailView" class="hidden max-w-4xl mx-auto">
+                </div>
+        </main>
+    </div>
+
+    <script>
+        const papers = [
+            {
+                title: "Entropy-driven signal amplification integrated with machine learning in multiplex lateral flow immunoassay for sensitive Point-of-Care colon cancer diagnosis.",
+                summary: "대장암 조기 진단을 위한 순환 종양 세포(CTC) 검출 플랫폼",
+                method: "양쪽성 이온 폴리머 코팅 Fe3O4 나노입자, 엔트로피 구동 가닥 치환 반응(Strand Displacement), 3D 프린팅 판독기 및 머신러닝 알고리즘.",
+                results: "LOD (EpCAM 0.22ng/mL, Vimentin 0.16ng/mL), 혈액 1mL당 10개 세포 검출 가능, 실시간 EMT 추적 및 임상적 유효성 입증.",
+                insight: "나노 기술과 머신러닝을 결합하여 기존 면역 분석의 민감도 한계를 극복한 고성능 POCT 플랫폼 제시."
+            },
+            {
+                title: "Explainable AI based hybrid DRM-Net transfer learning model for breast cancer detection and classification using ultrasound images.",
+                summary: "유방 초음파 영상 기반 유방암 진단 하이브리드 모델",
+                method: "6가지 전이학습 모델 중 상위 3개 결합(Stacking), DRM-Net 구축, 이미지 마스킹 및 증강, CAM(Class Activation Mapping) 기반 XAI 도입.",
+                results: "정확도 96.71%, 정밀도 96%, AUC 99% 달성. 기존 SOTA 모델 상회.",
+                insight: "단순 성능 향상을 넘어 XAI를 통해 의료진에게 판단 근거를 시각적으로 제시하여 임상적 수용성을 높임."
+            },
+            {
+                title: "From 16S rRNA to deep learning: Evolution of computational approaches in human microbiome studies.",
+                summary: "마이크로바이옴 계산 분석의 기술적 진화 과정 분석",
+                method: "16S rRNA 시퀀싱에서 멀티오믹스 통합, 딥러닝(QIIME, MetaPhlAn, DeepMicro) 및 네트워크 모델링으로의 전환 분석.",
+                results: "단순 관찰에서 기능 및 기전 규명, 바이오마커 식별, 질병 발생 예측 과학으로 패러다임 전환 확인.",
+                insight: "AI 기반 통합 분석이 마이크로바이옴 연구를 정밀 의료의 핵심 동력으로 격상시킴."
+            },
+            {
+                title: "A novel prognostic model for lung squamous cell carcinoma based on multi-omics analysis and machine learning.",
+                summary: "폐편평세포암(LUSC)의 신규 예후 모델 LUSCSPI 개발",
+                method: "mRNA, DNA 메틸화, 변이, lncRNA 통합 분석, LASSO 알고리즘 기반 20개 핵심 유전자 최적화.",
+                results: "위험군별 독립적 예후 인자 입증, 고위험군 특이적 항암제 반응성(Shikonin 등) 및 저위험군 약물 반응 차이 규명.",
+                insight: "면역학적 요소(TLS)와 다중 오믹스를 결합하여 맞춤형 치료 전략 수립을 위한 강력한 도구 제공."
+            },
+            {
+                title: "Predicting the influence of homologous recombination repair deficiency genes on glioma heterogeneity and patient prognosis using multi-omics analysis and machine learning.",
+                summary: "상동 재조합 결핍(HRD) 유전자의 신경교종 예후 예측 모델",
+                method: "TCGA/CGGA 통합 데이터 분석, LASSO-RSF 결합 모델링, qPCR 실험 검증, 7개 핵심 유전자(POLR2F 등) 기반 인덱스 구축.",
+                results: "HRD Index와 생존율 간 높은 상관관계 입증, 면역 미세환경 및 약물 반응성 차이 규명.",
+                insight: "데이터 기반 모델링과 In vitro 실험을 병행하여 모델의 신뢰도와 정밀 의료 적용 가능성을 높임."
+            },
+            {
+                title: "Improving Colorectal Cancer Detection with AI-Assisted Colonoscopy: A Systematic Review and Meta-Analysis of 38 RCTs with GRADE Assessment.",
+                summary: "AI 보조 대장 내시경의 병변 검출 성능 메타분석",
+                method: "38개 RCT(29,745명) 통합 분석, GRADE 방법론 기반 근거 확실성 평가, 동아시아 등 지역별 하위 분석.",
+                results: "선종 발견율(ADR) 19% 향상, 선종 미검출률(AMR) 48% 감소. 동아시아 군에서 효과 두드러짐.",
+                insight: "AI 도입의 타당성을 뒷받침하는 강력한 임상 근거를 제시하나, 실제 암 발견율 향상을 위한 고도화 필요성 제언."
+            },
+            {
+                title: "Connectomics in brain tumor surgery: large-scale clinical feasibility and hypothesis-generating tractometry findings.",
+                summary: "뇌종양 수술에서의 AI 기반 커넥토믹스 임상 타당성 평가",
+                method: "192명 코호트 대상 Quicktome(AI 매핑) 및 Cleartome(신경망 추적) 활용, KPS 지수 및 FA(분획 이방성) 대칭성 분석.",
+                results: "수술 후 92% 환자에서 뇌 신경로 대칭성 개선 확인, 주요 신경로(CST, IFOF) 상태 호전 입증.",
+                insight: "종양 제거를 넘어 '뇌 기능 지도'를 AI로 실시간 분석하여 수술 성공을 기능적 관점에서 평가하는 전기를 마련."
+            },
+            {
+                title: "Interpretable machine learning model integrating CT radiomics, CTR, and clinical features for EGFR mutation prediction in ≤3 cm lung adenocarcinoma nodules.",
+                summary: "작은 폐선암 결절의 EGFR 변이 비침습적 예측 모델",
+                method: "CT 라디오믹스, CTR(고형 성분 비율), 임상 정보 통합 랜덤 포레스트 구축, SHAP 분석 기반 모델 해석.",
+                results: "결합 모델 AUC 0.76 달성, CTR이 가장 강력한 예측 변수임을 규명.",
+                insight: "조직 검사가 어려운 작은 결절에서 비침습적 유전체 위험도 층화가 가능함을 보여준 임상적 모델."
+            },
+            {
+                title: "Development and validation of a machine learning-driven mitochondrial gene signature for the diagnosis of breast cancer.",
+                summary: "미토콘드리아 유전자 기반 유방암 조기 진단 모델",
+                method: "WGCNA 기반 핵심 모듈 식별, 113개 알고리즘 조합 테스트, 조직 칩/IHC 검증, 분자 도킹 시뮬레이션.",
+                results: "glmBoost-LDA 결합 모델 C-index 0.947 기록, ACADS/AIFM2 핵심 지표 규명 및 치료 후보(유제놀 등) 발굴.",
+                insight: "미토콘드리아 기능을 암 진단과 치료 표적으로 연결한 융합 연구의 우수 사례."
+            },
+            {
+                title: "Multi-omics driven computational framework for cancer molecular subtype classification.",
+                summary: "암 분자 아형 분류를 위한 AI 파이프라인 표준화 가이드라인",
+                method: "35종 분류기, 20개 암종 153개 데이터셋, 8종 오믹스 모달리티 대규모 성능 비교 분석.",
+                results: "RNASeq/miRNA의 높은 정확도 확인, 소규모는 SVM/XGBoost, 대규모는 ResNet 등 DL 모델의 우위 규명.",
+                insight: "AI 도구 개발의 재현성을 높이기 위해 데이터 규모 및 유형에 따른 최적의 AI 모델 조합 기준 제시."
+            },
+            {
+                title: "A multi-task learning model for evaluating non-tumor gastric diseases indicators in whole slide images.",
+                summary: "WSI 기반 비종양성 위질환 지표(염증, 위축 등) 통합 평가 AI",
+                method: "다중 작업 학습(MTL) 및 자기지도학습(SSL) 도입, Sydney System 기반 4대 지표 통합 분석.",
+                results: "단일 작업 모델 대비 정확도 향상, 복잡한 병리 지표 간 상관관계 수치화 및 진단 객관성 확보.",
+                insight: "위암 전구 병변의 복잡한 소견을 AI로 자동화하여 병리 의사의 진단 보조 도구로서의 가치 입증."
+            },
+            {
+                title: "P22 Using VECTRA and AI analysis to monitor paediatric lesions: a review of cases.",
+                summary: "소아 피부 병변 모니터링을 위한 3D 이미징 및 AI 분석",
+                method: "소아 환자 14명 대상 VECTRA 3D 시스템 및 AI 보조 분석 후향적 사례 검토.",
+                results: "불필요한 수술적 절제 감소 및 보호자 불안 완화 기여, 보존적 관리의 정밀성 향상.",
+                insight: "진단이 까다로운 소아 분야에서 AI가 보조 도구로서 '불필요한 의료 행위'를 줄이는 데 기여함을 확인."
+            },
+            {
+                title: "Learning feature dependencies for precise tumor region detection and segmentation in optical coherence tomography images.",
+                summary: "OCT 영상 내 종양 영역 정밀 탐지 DIFSM 프레임워크",
+                method: "Vision Transformer 기반 픽셀 간 의존성 분석(DIFSM), 강도/그래디언트 통합 학습.",
+                results: "Dice 96.2%, IoU 94.8% 달성. 기존 모델 대비 정확도 14.39% 향상.",
+                insight: "픽셀 간 모호한 경계 문제를 Transformer의 전역 문맥 이해 능력으로 해결하여 AI 진단 신뢰도 격상."
+            },
+            {
+                title: "[Uso de la inteligencia artificial en el diagnóstico de alteraciones de la citología cervicouterina].",
+                summary: "자궁경부 세포진 검사 효율화를 위한 AI 모델 비교",
+                method: "DenseNet, InceptionV3, MobileNet, VGG19 모델 비교, 650개 자궁경부 세포 이미지 분석.",
+                results: "InceptionV3(민감도 0.93)는 선별 검사에, MobileNet(특이도 0.99)은 정밀 진단에 최적화됨을 확인.",
+                insight: "AI를 활용한 1차 스크리닝(Rule-out) 도입 시 병리 의사의 업무 부담을 획기적으로 줄일 수 있음."
+            },
+            {
+                title: "Advanced artificial intelligence in piRNA and PIWI-like protein research: A systematic review.",
+                summary: "암 바이오마커 piRNA 분석을 위한 최적 AI 모델 규명",
+                method: "24편 원저 논문 체계적 고찰, LSTM, GCN, SVM, RNN 모델 성능 비교.",
+                results: "LSTM 모델이 정확도 92.3%로 최고 성능 기록, GCN은 질병 연관성 식별에 탁월.",
+                insight: "서열 데이터 분석에 강점이 있는 LSTM과 네트워크 분석에 강한 GCN의 조화가 암 연구의 핵심임을 시사."
+            },
+            {
+                title: "Validation of fibroblast activation protein and α-smooth muscle actin as prognostic biomarkers in prostate cancer.",
+                summary: "AI 정량 분석을 통한 전립선암 기질 바이오마커 검증",
+                method: "딥러닝 기반 조직 구획(상피/기질/면역) 자동 분류 파이프라인, 835명 대규모 코호트 검증.",
+                results: "기질 내 FAP 발현이 독립적 예후 인자임을 확립, 기존 글리슨 등급의 주관성 한계 극복.",
+                insight: "디지털 병리 AI가 종양 미세환경(TME) 정량화의 표준을 제시하여 정밀 의학의 깊이를 더함."
+            },
+            {
+                title: "Predictive value of current nodal staging systems and machine learning nomogram for pancreatic head cancer.",
+                summary: "췌두부암 환자의 LODDS 병기 시스템 우월성 및 예후 모델",
+                method: "SEER 및 다기관 외적 검증, LODDS 기반 머신러닝 노모그램 개발, C-index/DCA 분석.",
+                results: "LODDS 시스템이 모든 림프절 병기 중 최상 성능 기록. AJCC 병기 대비 예측력 우위 확인.",
+                insight: "림프절 검출 수에 민감하지 않은 LODDS의 유용성을 AI로 입증하여 실제 임상 가이드라인 개선 근거 마련."
+            },
+            {
+                title: "TC check: a web app for thyroid cancer recurrence prediction using explainable machine learning.",
+                summary: "갑상선암 재발 예측을 위한 웹 애플리케이션 개발",
+                method: "XGBoost 메타 모델 기반 스태킹 앙상블, SHAP 분석 기반 XAI, 인터랙티브 웹(TCcheck) 구축.",
+                results: "AUC 0.9921, 정확도 96.52% 달성. 치료 반응 및 연령이 주요 재발 인자임을 규명.",
+                insight: "블랙박스 문제를 해결하고 실제 의료진이 사용 가능한 웹 기반 도구를 제공하여 현장 적용성 극대화."
+            },
+            {
+                title: "Lightweight Vision Transformer with transfer learning for Alzheimer's disease severity assessment.",
+                summary: "알츠하이머 중증도 평가용 경량 ViTTL 모델",
+                method: "Vision Transformer-DenseNet 하이브리드, LIME/Grad-CAM 시각화, 모델 크기 획기적 축소(6.47MB).",
+                results: "정확도 99.89% 달성. 해마 부위 등 병변 집중도가 전문의 판독과 0.85 유사도 기록.",
+                insight: "고성능 진단 능력을 유지하면서도 경량화를 성공시켜 리소스가 제한된 임상 현장 배포 가능성 증명."
+            },
+            {
+                title: "MRI-based deep learning and radiomics pipeline for myxoid liposarcoma: a feasibility study.",
+                summary: "희귀 점액성 지방육종 진단 보조 AI 파이프라인",
+                method: "3D U-Net 기반 자동 종양 분할, 랜덤 포레스트 기반 라디오믹스 등급 분류.",
+                results: "종양 분할 Dice 0.892, 등급 분류 AUC 0.745 기록. 비침습적 등급 판별 타당성 확보.",
+                insight: "데이터가 적은 희귀 암 분야에서도 AI를 통한 자동화 파이프라인이 임상 보조 도구로 작동 가능함을 입증."
+            }
+        ];
+
+        const sidebarList = document.getElementById('sidebarList');
+        const detailView = document.getElementById('detailView');
+        const emptyState = document.getElementById('emptyState');
+        const searchInput = document.getElementById('searchInput');
+
+        function renderSidebar(filter = '') {
+            sidebarList.innerHTML = '';
+            papers.forEach((paper, index) => {
+                if (paper.title.toLowerCase().includes(filter.toLowerCase()) || 
+                    paper.summary.toLowerCase().includes(filter.toLowerCase())) {
+                    const div = document.createElement('div');
+                    div.className = 'sidebar-item p-4 border-b border-slate-100 transition-all';
+                    div.innerHTML = `
+                        <h3 class="text-sm font-semibold text-slate-800 line-clamp-2">${paper.title}</h3>
+                        <p class="text-xs text-blue-600 mt-1">${paper.summary}</p>
+                    `;
+                    div.onclick = () => showDetail(index, div);
+                    sidebarList.appendChild(div);
+                }
+            });
+        }
+
+        function showDetail(index, element) {
+            // UI state change
+            document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active'));
+            element.classList.add('active');
+            emptyState.classList.add('hidden');
+            detailView.classList.remove('hidden');
+
+            const paper = papers[index];
+            detailView.innerHTML = `
+                <div class="content-card">
+                    <div class="mb-6">
+                        <span class="bg-blue-100 text-blue-700 text-xs font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">Research Summary</span>
+                        <h2 class="text-3xl font-bold text-slate-900 mt-4 leading-tight">${paper.title}</h2>
+                        <p class="text-lg text-slate-500 mt-2 font-medium italic border-l-4 border-blue-400 pl-4">${paper.summary}</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 gap-6 mt-8">
+                        <section class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                            <h4 class="flex items-center text-slate-800 font-bold mb-4">
+                                <i class="fa-solid fa-vial text-blue-500 mr-3"></i> 주요 방법론 (Methodology)
+                            </h4>
+                            <div class="markdown-content text-slate-600 leading-relaxed">${paper.method}</div>
+                        </section>
+
+                        <section class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                            <h4 class="flex items-center text-slate-800 font-bold mb-4">
+                                <i class="fa-solid fa-chart-line text-green-500 mr-3"></i> 주요 결과 (Key Results)
+                            </h4>
+                            <div class="markdown-content text-slate-600 leading-relaxed">${paper.results}</div>
+                        </section>
+
+                        <section class="bg-blue-50 p-6 rounded-xl shadow-sm border border-blue-100">
+                            <h4 class="flex items-center text-blue-900 font-bold mb-4">
+                                <i class="fa-solid fa-lightbulb text-yellow-500 mr-3"></i> 전문가적 견해 및 시사점
+                            </h4>
+                            <p class="text-blue-800 leading-relaxed">${paper.insight}</p>
+                        </section>
+                    </div>
+                </div>
+            `;
+        }
+
+        searchInput.oninput = (e) => renderSidebar(e.target.value);
+
+        // Initial render
+        renderSidebar();
+    </script>
+</body>
+</html>
