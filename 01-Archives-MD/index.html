@@ -40,11 +40,13 @@
         const id = text.toLowerCase().replace(/[^\w가-힣]+/g, '-');
 
         // 목차 항목 생성
-        const li = document.createElement('li');
-        li.className = `depth-${depth}`;
-        li.innerHTML = `<a href="#${id}">${text}</a>`;
-        tocListEl.appendChild(li);
-
+        if (depth === 1 ) {            
+            const li = document.createElement('li');
+            li.className = `depth-${depth}`;
+            li.innerHTML = `<a href="#${id}">${text}</a>`;
+            tocListEl.appendChild(li);
+        }
+        
         return `<h${depth} id="${id}">${text}</h${depth}>`;
     };
 
