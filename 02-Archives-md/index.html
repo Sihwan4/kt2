@@ -102,8 +102,15 @@
             return response.text(); // 여기서 Promise를 반환함
         })
         .then(markdownText => {
-            // 변환된 텍스트를 파싱하여 화면에 출력
-            contentEl.innerHTML = marked.parse(markdownText);
+			// 1. 먼저 마크다운을 HTML로 변환합니다.
+		    let htmlContent = marked.parse(markdownText);
+		
+		    // 2. </strong> 바로 뒤에 한글(가-힣)이 붙어 있는 경우, 그 사이에 제로 너비 공백(&#8203;) 삽입
+		    // 정규표현식 설명: </strong> 태그와 한글([가-힣]) 사이를 찾아내어 처리합니다.
+		    htmlContent = htmlContent.replace(/<\/strong>([가-힣])/g, '</strong>&#8203;$1');
+		    htmlContent = htmlContent.replace(/<\/em>([가-힣])/g, '</em>&#8203;$1');
+            // 화면에 출력
+            contentEl.innerHTML = htmlContent
 			
 			if (window.MathJax && window.MathJax.typesetPromise) {
 			            window.MathJax.typesetPromise([contentEl]).catch((err) => console.log('MathJax 에러:', err));
